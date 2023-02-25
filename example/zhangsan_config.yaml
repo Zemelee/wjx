@@ -1,0 +1,29 @@
+URL: "https://www.wjx.cn/vm/QaaZ20B.aspx#"
+
+NUM_TO_ANS: 10
+
+ALL_QUESTIONS:
+    '1':
+        type : "single_choice_question"
+        possibility : [0.1, 0.1, 0.8]
+
+    '2':
+        type : "multiple_choice_question"
+        possibility : [0.1, 0.1, 0.8]
+
+    '3':
+        type : "matrix_question"
+        num_row : 6
+        num_column : 5
+        possibility : [0.1, 0.1, 0.2, 0.2, 0.4]
+
+    '4':
+        type : "sliding_question"
+
+    '5':
+        type : "filling_blank_question"
+        candidate_ans : ["1", "2", "3"]
+        possibility : [0.1, 0.1, 0.8]
+        
+    '6':
+        type : "sorting_question"

@@ -1,0 +1,5 @@
+argparse
+selenium==3.141.0
+numpy
+easy_dict
+pyyaml
