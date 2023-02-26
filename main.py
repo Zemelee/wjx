@@ -15,7 +15,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     cfg = cfg_from_yaml_file(args.cfg_file)
     
-    answer = AutoQuestionnaireAnswer(cfg)
+    answer = AutoQuestionnaireAnswer(cfg)  # 主要靠这个类
     total_try = cfg.NUM_TO_ANS
     try:
         for one_try in range(total_try):
