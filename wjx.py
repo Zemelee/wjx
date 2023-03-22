@@ -11,11 +11,16 @@ readme:
     代码使用规则：
         你需要提前安装python环境，且已具备上述的所有安装包（笔者的selenium版本号：3.141.0，版本号是3就可以，其余安装包默认即可）
         还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用（详情请自行百度）
+    效果展示:
+            http://b23.tv/7o1TW83
+    使用教程：
+            http://b23.tv/T7hWEES
     代码原理:
         通过html标签定位到每一道题，再按指定概率点击每道题的选项
     注意：
         这份代码目前只做示范，仅仅针对下面url中的链接有效，如果需要刷自己的问卷，需要自己修改run函数和url变量
-        后续会添加代理功能，以实现提交ip的指定，敬请期待
+        后续会添加代理功能，以实现提交ip的指定，敬请期待（划掉）
+        ip代理、多窗口同时填写、同一窗口重复填写（效率更高，更省CPU）、翻页、更多题型已经实现，代码付费。
     最后的最后：
         如果对代码有任何疑问，欢迎在平台（不是指github）上私我，我看到后会尽快给出解答
         代码可能具有时效性，但短时间内暂时还不会失效
@@ -44,7 +49,7 @@ def int_random(m, n, o):
 
 
 def run():
-    # 躲避智能检测，将网页的window.Navigator中的webDriver设置为false
+    # 躲避智能检测，将网页的window.navigator中的webdriver设置为false
     option = webdriver.ChromeOptions()
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
     option.add_experimental_option('useAutomationExtension', False)
@@ -82,7 +87,7 @@ def run():
     # 第3题矩阵题
     i = 3
     for j in range(1, 7):  # 矩阵题有6个选择题
-        # 指定2-7的概率分布
+        # 指定2-6的概率分布
         r = numpy.random.choice(a=numpy.arange(2, 7), p=[0.27, 0.35, 0.13, 0.2, 0.05])
         # r = random.randint(2, 6)  # 每个选择题5个选项生成随机数
         driver.find_element(By.CSS_SELECTOR, '#drv{}_{} > td:nth-child({})'.format(i, j, r)).click()
@@ -106,7 +111,7 @@ def run():
         driver.find_element(By.CSS_SELECTOR, '#div{} > ul > li:nth-child({})'.format(i, b)).click()
         time.sleep(0.4)
     # ------------------------------------------------------------------------
-    time.sleep(0.4)
+
     # 点击提交
     driver.find_element(By.XPATH, '//*[@id="ctlNext"]').click()
     # 出现点击验证码验证
@@ -116,8 +121,8 @@ def run():
     time.sleep(0.5)
     # 点击智能检测按钮
     driver.find_element(By.XPATH, '//*[@id="SM_BTN_1"]').click()
-    time.sleep(3)
-    # 滑块验证暂时可能会报错
+    time.sleep(4)
+    # 滑块验证
     try:
         # 定位滑块
         slider = driver.find_element(By.XPATH,
@@ -129,14 +134,14 @@ def run():
             for x in tracks:
                 # 按轨迹沿x方向滑动
                 ActionChains(driver).move_by_offset(xoffset=x, yoffset=0).perform()
-            time.sleep(0.01)
+                time.sleep(0.01)
         except:
             #  模拟释放鼠标
             ActionChains(driver).release().perform()
     except:
         pass
     # 关闭页面
-    time.sleep(3)
+    time.sleep(1)
     handles = driver.window_handles
     driver.switch_to.window(handles[0])
     # 关闭当前页面，如果只有一个页面，则也关闭浏览器
