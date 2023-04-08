@@ -131,14 +131,14 @@ def run():
     driver.find_element(By.XPATH, '//*[@id="SM_BTN_1"]').click()
     time.sleep(4)
     # 尝试滑块验证---短时间内刷51份问卷过后会出现滑块验证
-    #和视频教程有点不一样，因为后来升级了，报错率更低，我try了try，大概1%的报错率（2022.4.28）。
+    #和视频教程有点不一样，因为后来升级了，报错率更低，我try了try，大概1%的报错率（2022.4.8）
     try:
         slider = driver.find_element(By.XPATH, '//*[@id="nc_1__scale_text"]/span')
         if str(slider.text).startswith("请按住滑块"):
             width = slider.size.get('width')
             ActionChains(driver).drag_and_drop_by_offset(slider, width, 0).perform()
     except:
-        print("滑动失败")
+        pass
     # 关闭页面
     time.sleep(1)
     handles = driver.window_handles
