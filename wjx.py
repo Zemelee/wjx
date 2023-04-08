@@ -90,7 +90,7 @@ def run():
         driver.find_element(By.CSS_SELECTOR, f'#drv{i}_{j} > td:nth-child({r})').click()
 
     # 第4题滑动题、填空题
-    score = random.randint(1, 100)
+    score = random.randint(1, 100) #随机填写1-100的数字
     driver.find_element(By.CSS_SELECTOR, '#q4').send_keys(score)
 
     # 第5题填空题
@@ -99,7 +99,7 @@ def run():
     # 随机填写1，2，3
     driver.find_element(By.CSS_SELECTOR, '#q5').send_keys(list[index])
 
-    # 第6题排序题
+    # 第6题排序题（随机排序）
     i = 6
     xpath = f'//*[@id="div{i}"]/ul/li'
     a = driver.find_elements(By.XPATH, xpath)
@@ -112,7 +112,7 @@ def run():
     i = 7
     xpath = f'//*[@id="div{i}"]/div[2]/div/ul/li'
     a = driver.find_elements(By.XPATH, xpath)
-    b = random.randint(j, len(a))
+    b = random.randint(1, len(a))
     driver.find_element(By.CSS_SELECTOR, f'#div{i} > div.scale-div > div > ul > li:nth-child({b})').click()
 
     # 第8题和第7题基本一样，我就不再写了，你们可以自己写写试试看哈哈
@@ -131,23 +131,14 @@ def run():
     driver.find_element(By.XPATH, '//*[@id="SM_BTN_1"]').click()
     time.sleep(4)
     # 尝试滑块验证---短时间内刷51份问卷过后会出现滑块验证
+    #和视频教程有点不一样，因为后来升级了，报错率更低，我try了try，大概1%的报错率（2022.4.28）。
     try:
-        # 定位滑块
-        slider = driver.find_element(By.XPATH,
-                                     '/html/body/div[1]/form/div[7]/div[8]/div[2]/div/div/div/div[3]/div[1]/div/div[1]/span')
-        # 模拟鼠标按住不放
-        ActionChains(driver).click_and_hold(slider).perform()
-        # 按滑动轨迹移动
-        try:
-            for x in tracks:
-                # 按轨迹沿x方向滑动
-                ActionChains(driver).move_by_offset(xoffset=x, yoffset=0).perform()
-                time.sleep(0.01)
-        except:
-            #  模拟释放鼠标
-            ActionChains(driver).release().perform()
+        slider = driver.find_element(By.XPATH, '//*[@id="nc_1__scale_text"]/span')
+        if str(slider.text).startswith("请按住滑块"):
+            width = slider.size.get('width')
+            ActionChains(driver).drag_and_drop_by_offset(slider, width, 0).perform()
     except:
-        pass
+        print("滑动失败")
     # 关闭页面
     time.sleep(1)
     handles = driver.window_handles
