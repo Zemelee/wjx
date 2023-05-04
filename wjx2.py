@@ -10,10 +10,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 
 """
+代码前身可能更容易理解一点：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  使用教程： https://www.bilibili.com/video/BV1qc411T7CG/
 代码使用规则：
     你需要提前安装python环境，且已具备上述的所有安装包（我的selenium版本号：3.141.0，其余安装包默认即可）
     还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
     按要求填写概率值并替换成自己的问卷链接即可运行。
+    虽然但是！！！及时正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活。。。爱莫能助
     如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
 """
 
@@ -103,6 +105,8 @@ print("量表题参数：", scale_prob)
 
 
 # 检测题量和页数的函数，返回一个列表，第一个数表示第一页的题量，第二个数表示第二页的题量；比如示例问卷会返回：[3, 2, 2, 7]
+# 虽然但是，我见识过问卷星再没有跳题逻辑的情况下有题被隐藏，我当时就??????这会导致detect返回包含被隐藏的题，数值可能偏高，比如可见题目[3, 2, 2, 7]被detect成[4, 2, 2, 7]。。
+# 这个嘛，我暂时无解，只能说问卷星真的太灵活，比我这代码灵活多了
 def detect(driver):
     q_list = []  # 长度等于页数，数字代表该页的题数
     xpath = '//*[@id="divQuestion"]/fieldset'
