@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
     你需要提前安装python环境，且已具备上述的所有安装包（我的selenium版本号：3.141.0，其余安装包默认即可）
     还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
     按要求填写概率值并替换成自己的问卷链接即可运行。
-    虽然但是！！！及时正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活。。。爱莫能助
+    虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
     如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
 """
 
@@ -29,9 +29,9 @@ from selenium.webdriver.common.by import By
 """
 def getips(num):
     ips = []
-    api = f"http://http.tiqu.alibabaapi.com/getip?num={num}&type=3&pack={1}&port=1&lb=2&pb=4&regions="
+    api = f"http://http.tiqu.alibabaapi.com/getip?num={num}&type=3&pack={"你的值"}&port=1&lb=2&pb=4&regions="
     ip_and_port = requests.get(api).text  # 获取ip和端口
-    pattern = r"(\d+\.\d+\.\d+\.\d+):(\d+)"
+    pattern = r"(\d+\.\d+\.\d+\.\d+):(\d+)"  # 正则匹配ip和端口
     matches = re.findall(pattern, ip_and_port)
     for match in matches:
         ip = match[0]
@@ -41,7 +41,7 @@ def getips(num):
     return ips
 
 
-# 获取一个代理ip
+# 获取代理ip
 # ips = []
 # 需要多少个ip就填几
 ips = getips(1)  # 这里表示需要1个代理ip
@@ -59,7 +59,7 @@ url = 'https://www.wjx.cn/vm/OM6GYNV.aspx#'
 """
 single_prob = {"1": [1, 1, 0], "2": -1, "3": -1, "4": -1, "5": -1, "6": [1, 0], }
 
-# 下拉框参数，具体含义参考单选题
+# 下拉框参数，具体含义参考单选题，如果没有下拉框题也不要删，就让他躺在这儿吧，其他题也是哦，没有就不动他，别删，只改你有的题型的参数就好啦
 droplist_prob = {"1": [1, 1, 1]}
 
 # 多选题概率参数,0不选该选项，100必选，[10, 50]表示1:5,-1表示随机，
@@ -68,12 +68,13 @@ multiple_prob = {"9": [100, 2, 1, 1]}
 # 注意！！！如果选项数量比较少，建议多选的数量参数不要太大，因为数量参数值越大，最后刷出来的数据分布误差越大！！！4个选项建议选1-2个即可。
 multiple_opts = {"9": 1, }
 
-# 矩阵题概率参数,-1表示随机，其他含义参考单选题；在示例问卷中矩阵题是第10题，每个小题都要设置概率值才行！！以下参数表示第二题随机，其余全选A
+# 矩阵题概率参数,-1表示随机，其他含义参考单选题；同样的，题号不重要，保证第几个参数对应第几个矩阵小题就可以了；
+# 在示例问卷中矩阵题是第10题，每个小题都要设置概率值才行！！以下参数表示第二题随机，其余题全选A
 matrix_prob = {"1": [1, 0, 0, 0, 0], "2": -1, "3": [1, 0, 0, 0, 0], "4": [1, 0, 0, 0, 0],
                "5": [1, 0, 0, 0, 0], "6": [1, 0, 0, 0, 0]}
 
 # 量表题概率参数，参考单选题
-scale_prob = {"7": [0, 2, 3, 4, 1], "12": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10]}
+scale_prob = {"7": [0, 2, 3, 4, 1], "12": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]}
 
 # 填空题参数，在题号后面按该格式填写需要填写的内容，
 texts = {"8": ["内容1", "内容2", " 内容3"], }
@@ -255,8 +256,8 @@ def scale(driver, current, index):
 def brush(driver):
     q_list = detect(driver)  # 检测页数和每一页的题量
     single_num = 0  # 第num个单选题
-    vacant_num = 0  # 第num个多选题
-    droplist_num = 0  # 第num个多选题
+    vacant_num = 0  # 第num个填空题
+    droplist_num = 0  # 第num个下拉框题
     multiple_num = 0  # 第num个多选题
     matrix_num = 0  # 第num个矩阵小题
     scale_num = 0  # 第num个量表题
@@ -364,7 +365,7 @@ def run(xx, yy):
 # 多线程执行run函数
 if __name__ == "__main__":
     count = 0  # 记录已刷份数
-    # 需要几个窗口同时刷就设置几个thread_?，默认两个
+    # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
     thread_1 = Thread(target=run, args=(50, 50))
     thread_1.start()
     thread_2 = Thread(target=run, args=(650, 280))
