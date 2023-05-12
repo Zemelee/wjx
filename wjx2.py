@@ -27,24 +27,17 @@ from selenium.webdriver.common.by import By
 注意！！！获取到的ip可能具有多种格式，但是脚本是按照type=3、port=1、lb=2、pb=4格式来提取获取到的ip的
 如果格式与上述不一致可能提取不到ip，所以按照上述格式获取ip哦，关于代理ip的更多使用方法参考官网
 """
-def getips(num):
-    ips = []
-    api = f"http://http.tiqu.alibabaapi.com/getip?num={num}&type=3&pack={"你的值"}&port=1&lb=2&pb=4&regions="
-    ip_and_port = requests.get(api).text  # 获取ip和端口
-    pattern = r"(\d+\.\d+\.\d+\.\d+):(\d+)"  # 正则匹配ip和端口
-    matches = re.findall(pattern, ip_and_port)
-    for match in matches:
-        ip = match[0]
-        port = match[1]
-        dist = {"ip": ip, "port": port}
-        ips.append(dist)
-    return ips
+ips = []
+api = f"http://http.tiqu.alibabaapi.com/getip?num=10&type=3&pack={'你的值'}&port=1&lb=2&pb=4&regions="
+ip_and_port = requests.get(api).text  # 获取ip和端口
+pattern = r"(\d+\.\d+\.\d+\.\d+):(\d+)"  # 正则匹配ip和端口
+matches = re.findall(pattern, ip_and_port)
+for match in matches:
+    ip = match[0]
+    port = match[1]
+    dist = {"ip": ip, "port": port}
+    ips.append(dist)
 
-
-# 获取代理ip
-# ips = []
-# 需要多少个ip就填几
-ips = getips(1)  # 这里表示需要1个代理ip
 print("代理ip：", ips)
 
 # 示例问卷
