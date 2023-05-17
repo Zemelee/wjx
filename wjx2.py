@@ -116,13 +116,16 @@ def detect(driver):
     if page_num >= 2:
         for i in range(2, page_num + 1):
             qs = driver.find_elements(By.XPATH, f'//*[@id="fieldset{i}"]/div')
-            # 遍历每一个“题”，判断其是否可以回答
+            invalid_item = 0  # 每一页的无效问题初始值为0
+            # 遍历每一个div，判断其是否可以回答
             for qs_item in qs:
                 # 判断其topic属性值是否值包含数字，因为只有题的div的topic属性才是纯数字
                 if qs_item.get_attribute("topic").isdigit() is False:
                     invalid_item += 1
-            q_list.append(len(qs) - 1)
+            # [3, 2, 2, 7]
+            q_list.append(len(qs) - invalid_item)
     return q_list
+
 
 
 # 填空题处理函数
