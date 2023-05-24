@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 
 """
 readme:
+    任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！
     代码使用规则：
         你需要提前安装python环境，且已具备上述的所有安装包（笔者的selenium版本号：3.141.0，版本号是3就可以，其余安装包默认即可）
         还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用
