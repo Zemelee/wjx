@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！
 代码前身可能更容易理解一点：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  使用教程： https://www.bilibili.com/video/BV1qc411T7CG/
 代码使用规则：
-    你需要提前安装python环境，且已具备上述的所有安装包（我的selenium版本号：3.141.0，其余安装包默认即可）
+    你需要提前安装python环境，且已具备上述的所有安装包（selenium版本号需要和webdriver匹配）
     还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
     按要求填写概率值并替换成自己的问卷链接即可运行。
     虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
