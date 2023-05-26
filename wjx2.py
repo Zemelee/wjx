@@ -301,16 +301,19 @@ def brush(driver):
 
 # 提交函数
 def submit(driver):
+    time.sleep(1)
+    # 点击对话框的确认按钮
     try:
-        # 出现点击验证码验证
-        time.sleep(1)
-        # 点击对话框的确认按钮
         driver.find_element(By.XPATH, '//*[@id="layui-layer1"]/div[3]/a').click()
-        # 点击智能检测按钮
+        time.sleep(1)
+    except:
+        pass
+    # 点击智能检测按钮，因为可能点击提交过后直接提交成功的情况，所以智能检测也要try
+    try:
         driver.find_element(By.XPATH, '//*[@id="SM_BTN_1"]').click()
         time.sleep(3)
     except:
-        print("无验证")
+        pass
     # 滑块验证
     try:
         slider = driver.find_element(By.XPATH, '//*[@id="nc_1__scale_text"]/span')
