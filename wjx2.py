@@ -10,7 +10,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 
 """
-任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！
+任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐性，随缘了2023.5.5）
 代码前身可能更容易理解一点：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  使用教程： https://www.bilibili.com/video/BV1qc411T7CG/
 代码使用规则：
     你需要提前安装python环境，且已具备上述的所有安装包（selenium版本号需要和webdriver匹配）
