@@ -24,6 +24,7 @@ from selenium.webdriver.common.by import By
 
 """
 获取代理ip，这里要使用到一个叫“太阳http代理”的第三方服务https://www.tyhttp.com/getapi/
+或者“品赞ip”，https://www.ipzan.com?pid=ggj6roo98，个人觉得这个更好用，但是对应的提取代码可能需要重写
 先将自己电脑的公网ip添加到网站的白名单中，然后获取ip链接即可
 注意！！！获取到的ip可能具有多种格式，但是脚本是按照type=3、port=1、lb=2、pb=4格式来提取获取到的ip的
 如果格式与上述不一致可能提取不到ip，所以按照上述格式获取ip哦，关于代理ip的更多使用方法参考官网
