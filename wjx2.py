@@ -37,6 +37,8 @@ from selenium.webdriver.common.by import By
  option.add_argument(f'--proxy-server={ip}')
 如果不需要ip就不要取消注释，否则运行程序弹出的浏览器可能访问不了任何网站，不设置也不影响，此程序可直接运行
 """
+
+
 def zanip():
     # extract这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可，设置之后，记得取消run函数的注释！！！
     api = "https://service.ipzan.com/core-extract?num=1&no=？？？？&minute=1&format=txt&protocol=1&pool=quality&mode=whitelist&secret=？？"
@@ -335,9 +337,10 @@ def run(xx, yy):
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
     option.add_experimental_option('useAutomationExtension', False)
     global count
+    global stop
     global fail  # 失败次数
-    while True:
-        # 我猜你在找这里---------------------------------------需要ip的话取消下面两行代码的注释-----------------------------------------------------------------
+    while not stop:
+        # 我猜你在找这里------------------------------------如果需要ip，则取消下面两行代码的注释-----------------------------------------------------------------
         # ip = zanip()
         # option.add_argument(f'--proxy-server={ip}')
         driver = webdriver.Chrome(options=option)
@@ -361,7 +364,8 @@ def run(xx, yy):
             fail += 1
             logging.warning(f"失败{fail}次------------------------------")
             if fail >= 8:
-                logging.critical('失败次数过多，为防止榨干ip余额，程序已强制停止')
+                stop = True
+                logging.critical('失败次数过多，为防止榨干ip余额，程序将强制停止')
                 quit()
             driver.quit()
             continue
@@ -371,10 +375,11 @@ def run(xx, yy):
 if __name__ == "__main__":
     count = 0  # 记录已刷份数
     fail = 0  # 失败次数
+    stop = False
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
     thread_1 = Thread(target=run, args=(50, 50))
     thread_1.start()
-    thread_2 = Thread(target=run, args=(650, 280))
+    thread_2 = Thread(target=run, args=(650, 50))
     thread_2.start()
-    # thread_3 = Thread(target=run, args=(650, 50))
+    # thread_3 = Thread(target=run, args=(650, 280))
     # thread_3.start()
