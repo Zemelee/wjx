@@ -1,5 +1,6 @@
+import logging
 import random
-import re
+import traceback
 from threading import Thread
 import time
 
@@ -10,8 +11,16 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 
 """
-任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐性，随缘了2023.5.5）
+    @Author:鐘
+    @Time:2023.11
+"""
+
+"""
+任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐心，随缘了2023.5.5）
 代码前身可能更容易理解一点：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  使用教程： https://www.bilibili.com/video/BV1qc411T7CG/
+除了python，作者还发布了js版脚本在greasy fork上，名字就叫“问卷星脚本”，不带任何前后缀，使用可能比py更方便且支持跳题逻辑；
+相关系列教程：https://space.bilibili.com/29109990/channel/collectiondetail?sid=1340503&ctype=0
+
 代码使用规则：
     你需要提前安装python环境，且已具备上述的所有安装包（selenium版本号需要和webdriver匹配）
     还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
@@ -20,27 +29,20 @@ from selenium.webdriver.common.by import By
     如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
 """
 
-
-
 """
-获取代理ip，这里要使用到一个叫“太阳http代理”的第三方服务https://www.tyhttp.com/getapi/
-或者“品赞ip”，https://www.ipzan.com?pid=ggj6roo98，个人觉得这个更好用，但是对应的提取代码可能需要重写
-先将自己电脑的公网ip添加到网站的白名单中，然后获取ip链接即可
-注意！！！获取到的ip可能具有多种格式，但是脚本是按照type=3、port=1、lb=2、pb=4格式来提取获取到的ip的
-如果格式与上述不一致可能提取不到ip，所以按照上述格式获取ip哦，关于代理ip的更多使用方法参考官网
+获取代理ip，这里要使用到一个叫“品赞ip”的第三方服务: https://www.ipzan.com?pid=ggj6roo98
+注册，将自己电脑的公网ip添加到网站的白名单中，然后选择地区，时长为1分钟，数据格式为txt，提取数量选1，然后点击生成api，将链接复制到放在zanip函数里
+设置完成后，将run函数里的下面两行的注释取消掉，不要问为什么视频教程里没说，因为与时俱进！(其实是因为代码还起来容易，视频录起来不容易2023.10.29)
+ ip = zanip()
+ option.add_argument(f'--proxy-server={ip}')
+如果不需要ip就不要取消注释，否则运行程序弹出的浏览器可能访问不了任何网站，不设置也不影响，此程序可直接运行
 """
-ips = []
-api = f"http://http.tiqu.alibabaapi.com/getip?num=10&type=3&pack={'你的值'}&port=1&lb=2&pb=4&regions="
-ip_and_port = requests.get(api).text  # 获取ip和端口
-pattern = r"(\d+\.\d+\.\d+\.\d+):(\d+)"  # 正则匹配ip和端口
-matches = re.findall(pattern, ip_and_port)
-for match in matches:
-    ip = match[0]
-    port = match[1]
-    dist = {"ip": ip, "port": port}
-    ips.append(dist)
+def zanip():
+    # extract这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可，设置之后，记得取消run函数的注释！！！
+    api = "https://service.ipzan.com/core-extract?num=1&no=？？？？&minute=1&format=txt&protocol=1&pool=quality&mode=whitelist&secret=？？"
+    ip = requests.get(api).text
+    return ip
 
-print("代理ip：", ips)
 
 # 示例问卷
 url = 'https://www.wjx.cn/vm/OM6GYNV.aspx#'
@@ -98,7 +100,9 @@ print("下拉框参数：", droplist_prob)
 print("多选题参数：", multiple_prob)
 print("矩阵题参数：", matrix_prob)
 print("量表题参数：", scale_prob)
-print("特别注意：所有按照比例的脚本只能让问卷总体数据表面上看起来合理，并不保证高新效度；如果对信效度有要求可以进群找作者代刷。")
+print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理，并不保证高信效度。")
+print("如果对信效度有要求可以进群找作者代刷。")
+
 
 # 检测题量和页数的函数，返回一个列表，第一个数表示第一页的题量，第二个数表示第二页的题量；比如示例问卷会返回：[3, 2, 2, 7]
 # 虽然但是，我见识过问卷星再没有跳题逻辑的情况下有题被隐藏，我当时就??????这会导致detect返回包含被隐藏的题，数值可能偏高，比如可见题目[3, 2, 2, 7]被detect成[4, 2, 2, 7]。。
@@ -127,7 +131,6 @@ def detect(driver):
             # [3, 2, 2, 7]
             q_list.append(len(qs) - invalid_item)
     return q_list
-
 
 
 # 填空题处理函数
@@ -331,41 +334,43 @@ def run(xx, yy):
     option = webdriver.ChromeOptions()
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
     option.add_experimental_option('useAutomationExtension', False)
-    # 随机获取某个代理值
-    if len(ips) == 0:
-        # 如果没有提取到代理则不设置代理
-        pass
-    else:
-        # 如果提取到代理则随机使用提取到的某一个
-        r = random.randint(0, len(ips) - 1)
-        current_ip = ips[r]["ip"]
-        current_port = ips[r]["port"]
-        option.add_argument(f'--proxy-server={current_ip}:{current_port}')
-    driver = webdriver.Chrome(options=option)
-    driver.set_window_size(600, 400)  # 设置浏览器窗口大小
-    driver.set_window_position(x=xx, y=yy)  # 设置浏览器窗口位置
-    driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument',
-                           {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'})
-    # 循环刷问卷
+    global count
+    global fail  # 失败次数
     while True:
-        global count
-        driver.get(url)
-        url1 = driver.current_url  # 表示问卷链接
-        brush(driver)
-        # 刷完后给一定时间让页面跳转
-        time.sleep(4)
-        url2 = driver.current_url  # 表示问卷填写完成后跳转的链接，一旦跳转说明填写成功
-        if url1 != url2:
-            count += 1
-            print(f"已填写{count}份 - {time.strftime('%H:%M:%S', time.localtime(time.time()))}")
+        # 我猜你在找这里---------------------------------------需要ip的话取消下面两行代码的注释-----------------------------------------------------------------
+        # ip = zanip()
+        # option.add_argument(f'--proxy-server={ip}')
+        driver = webdriver.Chrome(options=option)
+        driver.set_window_size(550, 650)
+        driver.set_window_position(x=xx, y=yy)
+        driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument',
+                               {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'})
+        try:
             driver.get(url)
-        else:
-            time.sleep(2)
+            url1 = driver.current_url  # 表示问卷链接
+            brush(driver)
+            # 刷完后给一定时间让页面跳转
+            time.sleep(4)
+            url2 = driver.current_url  # 表示问卷填写完成后跳转的链接，一旦跳转说明填写成功
+            if url1 != url2:
+                count += 1
+                print(f"已填写{count}份 - 失败{fail}次 - {time.strftime('%H:%M:%S', time.localtime(time.time()))} ")
+                driver.quit()
+        except:
+            traceback.print_exc()
+            fail += 1
+            logging.warning(f"失败{fail}次------------------------------")
+            if fail >= 8:
+                logging.critical('失败次数过多，为防止榨干ip余额，程序已强制停止')
+                quit()
+            driver.quit()
+            continue
 
 
 # 多线程执行run函数
 if __name__ == "__main__":
     count = 0  # 记录已刷份数
+    fail = 0  # 失败次数
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
     thread_1 = Thread(target=run, args=(50, 50))
     thread_1.start()
