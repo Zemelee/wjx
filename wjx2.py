@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 import traceback
 from threading import Thread
 import time
@@ -31,22 +32,22 @@ from selenium.webdriver.common.by import By
 
 """
 获取代理ip，这里要使用到一个叫“品赞ip”的第三方服务: https://www.ipzan.com?pid=ggj6roo98
-注册，将自己电脑的公网ip添加到网站的白名单中，然后选择地区，时长为1分钟，数据格式为txt，提取数量选1，然后点击生成api，将链接复制到放在zanip函数里
-设置完成后，将run函数里的下面两行的注释取消掉，不要问为什么视频教程里没说，因为与时俱进！(其实是因为代码还起来容易，视频录起来不容易2023.10.29)
- ip = zanip()
- option.add_argument(f'--proxy-server={ip}')
-如果不需要ip就不要取消注释，否则运行程序弹出的浏览器可能访问不了任何网站，不设置也不影响，此程序可直接运行
+注册，需要实名认证（这是为了防止你用代理干违法的事，相当于网站的免责声明，属于正常步骤，所有代理网站都会有这一步）
+将自己电脑的公网ip添加到网站的白名单中，然后选择地区，时长为1分钟，数据格式为txt，提取数量选1
+然后点击生成api，将链接复制到放在zanip函数里
+设置完成后，不要问为什么和视频教程有点不一样，因为与时俱进！(其实是因为懒，毕竟代码改起来容易，视频录起来不容易嘿嘿2023.10.29)
+如果不需要ip可不设置，也不影响此程序直接运行
 """
 
 
 def zanip():
-    # extract这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可，设置之后，记得取消run函数的注释！！！
-    api = "https://service.ipzan.com/core-extract?num=1&no=？？？？&minute=1&format=txt&protocol=1&pool=quality&mode=whitelist&secret=？？"
+    # 这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可
+    api = "https://service.ipzan.com/core-extract?num=1&no=?????&minute=1&area=?????&pool=quality&secret=?????"
     ip = requests.get(api).text
     return ip
 
 
-# 示例问卷
+# 示例问卷,试运行结束后,需要改成你的问卷地址
 url = 'https://www.wjx.cn/vm/OM6GYNV.aspx#'
 
 """
@@ -97,13 +98,13 @@ scale_prob = list(scale_prob.values())
 texts_prob = list(texts_prob.values())
 texts = list(texts.values())
 
-print("单选题参数：", single_prob)
-print("下拉框参数：", droplist_prob)
-print("多选题参数：", multiple_prob)
-print("矩阵题参数：", matrix_prob)
-print("量表题参数：", scale_prob)
-print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理，并不保证高信效度。")
-print("如果对信效度有要求可以进群找作者代刷。")
+print("单选题参数: ", single_prob)
+print("下拉框参数: ", droplist_prob)
+print("多选题参数: ", multiple_prob)
+print("矩阵题参数: ", matrix_prob)
+print("量表题参数: ", scale_prob)
+print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理, 并不保证高信效度。")
+print("如果对信效度有要求可以进群找作者代刷, 信效度max。")
 
 
 # 检测题量和页数的函数，返回一个列表，第一个数表示第一页的题量，第二个数表示第二页的题量；比如示例问卷会返回：[3, 2, 2, 7]
@@ -330,6 +331,14 @@ def submit(driver):
         pass
 
 
+# 校验IP地址合法性
+def validate(ip):
+    pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\d{1,5})$'
+    if re.match(pattern, ip):
+        return True
+    return False
+
+
 # 反复执行brush函数的函数
 def run(xx, yy):
     # 躲避智能检测，将webDriver设置为false
@@ -340,9 +349,11 @@ def run(xx, yy):
     global stop
     global fail  # 失败次数
     while not stop:
-        # 我猜你在找这里------------------------------------如果需要ip，则取消下面两行代码的注释-----------------------------------------------------------------
-        # ip = zanip()
-        # option.add_argument(f'--proxy-server={ip}')
+        ip = zanip()
+        if validate(ip):
+            option.add_argument(f'--proxy-server={ip}')
+        else:
+            print("IP设置失败")
         driver = webdriver.Chrome(options=option)
         driver.set_window_size(550, 650)
         driver.set_window_position(x=xx, y=yy)
@@ -363,9 +374,9 @@ def run(xx, yy):
             traceback.print_exc()
             fail += 1
             logging.warning(f"失败{fail}次------------------------------")
-            if fail >= 8:
+            if fail >= 8:  # 失败阈值
                 stop = True
-                logging.critical('失败次数过多，为防止榨干ip余额，程序将强制停止')
+                logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，检查代码是否正确')
                 quit()
             driver.quit()
             continue
@@ -379,7 +390,11 @@ if __name__ == "__main__":
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
     thread_1 = Thread(target=run, args=(50, 50))
     thread_1.start()
-    thread_2 = Thread(target=run, args=(650, 50))
-    thread_2.start()
+    # thread_2 = Thread(target=run, args=(650, 50))
+    # thread_2.start()
     # thread_3 = Thread(target=run, args=(650, 280))
     # thread_3.start()
+
+# 总结,你需要修改的有: ①每个题的比例参数 ②ip链接 ③问卷链接 ④如果对速度有要求则可以多设置几个浏览器
+# 祝君顺利, 遇到问题可进qq群交流, 虽然我不一定会回hhh
+# Presented by 鐘
