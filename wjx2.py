@@ -107,9 +107,82 @@ print("所有按照比例刷题的脚本只能让问卷总体数据表面上看�
 print("如果对信效度有要求可以进群找作者代刷, 信效度max。")
 
 
+# 下面这个函数可以不用管，也没什么值得修改的地方
+def run(xx, yy):
+    # 躲避智能检测，将webDriver设置为false
+    option = webdriver.ChromeOptions()
+    option.add_experimental_option('excludeSwitches', ['enable-automation'])
+    option.add_experimental_option('useAutomationExtension', False)
+    global count
+    global stop
+    global fail  # 失败次数
+    while not stop:
+        ip = zanip()
+        if validate(ip):
+            print(f"IP设置成功  -->  ", end="")
+            option.add_argument(f'--proxy-server={ip}')
+        else:
+            print("IP设置失败，将使用本机ip填写 -->  ", end="")
+        driver = webdriver.Chrome(options=option)
+        driver.set_window_size(550, 650)
+        driver.set_window_position(x=xx, y=yy)
+        driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument',
+                               {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'})
+        try:
+            driver.get(url)
+            url1 = driver.current_url  # 表示问卷链接
+            brush(driver)
+            # 刷完后给一定时间让页面跳转
+            time.sleep(4)
+            url2 = driver.current_url  # 表示问卷填写完成后跳转的链接，一旦跳转说明填写成功
+            if url1 != url2:
+                count += 1
+                print(f"已填写{count}份 - 失败{fail}次 - {time.strftime('%H:%M:%S', time.localtime(time.time()))} ")
+                driver.quit()
+        except:
+            traceback.print_exc()
+            fail += 1
+            logging.warning(f"已失败{fail}次,失败超过8次(左右)将强制停止------------------------------")
+            if fail >= 8:  # 失败阈值
+                stop = True
+                logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确')
+                quit()
+            driver.quit()
+            continue
+
+
+# 多线程执行run函数
+if __name__ == "__main__":
+    count = 0  # 记录已刷份数
+    fail = 0  # 失败次数
+    stop = False
+    # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
+    thread_1 = Thread(target=run, args=(50, 50))
+    thread_1.start()
+    thread_2 = Thread(target=run, args=(650, 50))
+    thread_2.start()
+    # thread_3 = Thread(target=run, args=(650, 280))
+    # thread_3.start()
+
+"""
+总结,你需要修改的有: 1 每个题的比例参数(必改)  2 问卷链接(必改)  3 ip链接(可选)  4 浏览器窗口数量(可选)
+如果只想完成问卷而已，下面的代码可以不用管了，over啦！
+如果想深究代码原理，请随意，注释什么的我自认为还是写的比较详细的哈哈
+    Presented by 鐘
+"""
+
+
+# 校验IP地址合法性
+def validate(ip):
+    pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\d{1,5})$'
+    if re.match(pattern, ip):
+        return True
+    return False
+
+
 # 检测题量和页数的函数，返回一个列表，第一个数表示第一页的题量，第二个数表示第二页的题量；比如示例问卷会返回：[3, 2, 2, 7]
-# 虽然但是，我见识过问卷星再没有跳题逻辑的情况下有题被隐藏，我当时就??????这会导致detect返回包含被隐藏的题，数值可能偏高，比如可见题目[3, 2, 2, 7]被detect成[4, 2, 2, 7]。。
-# 这个嘛，我暂时无解，只能说问卷星真的太灵活，比我这代码灵活多了
+# 虽然但是，我见识过问卷星再没有跳题逻辑的情况下有题被隐藏，我当时就??????
+# 这会导致detect返回包含被隐藏的题，数值可能偏高，比如可见题目[3, 2, 2, 7]被detect成[4, 2, 2, 7]。。
 def detect(driver):
     q_list = []  # 长度等于页数，数字代表该页的题数
     xpath = '//*[@id="divQuestion"]/fieldset'
@@ -330,73 +403,5 @@ def submit(driver):
     except:
         pass
 
-
-# 校验IP地址合法性
-def validate(ip):
-    pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\d{1,5})$'
-    if re.match(pattern, ip):
-        return True
-    return False
-
-
-# 反复执行brush函数的函数
-def run(xx, yy):
-    # 躲避智能检测，将webDriver设置为false
-    option = webdriver.ChromeOptions()
-    option.add_experimental_option('excludeSwitches', ['enable-automation'])
-    option.add_experimental_option('useAutomationExtension', False)
-    global count
-    global stop
-    global fail  # 失败次数
-    while not stop:
-        ip = zanip()
-        if validate(ip):
-            print(f"IP设置成功  -->  ", end="")
-            option.add_argument(f'--proxy-server={ip}')
-        else:
-            print("IP设置失败，将使用本机ip填写 -->  ", end="")
-        driver = webdriver.Chrome(options=option)
-        driver.set_window_size(550, 650)
-        driver.set_window_position(x=xx, y=yy)
-        driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument',
-                               {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'})
-        try:
-            driver.get(url)
-            url1 = driver.current_url  # 表示问卷链接
-            brush(driver)
-            # 刷完后给一定时间让页面跳转
-            time.sleep(4)
-            url2 = driver.current_url  # 表示问卷填写完成后跳转的链接，一旦跳转说明填写成功
-            if url1 != url2:
-                count += 1
-                print(f"已填写{count}份 - 失败{fail}次 - {time.strftime('%H:%M:%S', time.localtime(time.time()))} ")
-                driver.quit()
-        except:
-            traceback.print_exc()
-            fail += 1
-            logging.warning(f"已失败{fail}次,失败超过8次(左右)将强制停止------------------------------")
-            if fail >= 8:  # 失败阈值
-                stop = True
-                logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确')
-                quit()
-            driver.quit()
-            continue
-
-
-# 多线程执行run函数
-if __name__ == "__main__":
-    count = 0  # 记录已刷份数
-    fail = 0  # 失败次数
-    stop = False
-    # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
-    thread_1 = Thread(target=run, args=(50, 50))
-    thread_1.start()
-    thread_2 = Thread(target=run, args=(650, 50))
-    thread_2.start()
-    # thread_3 = Thread(target=run, args=(650, 280))
-    # thread_3.start()
-
-# 总结,你需要修改的有: 1 每个题的比例参数  2 ip链接  3 问卷链接  4 如果对速度有要求则可以多设置几个浏览器
 # 祝君顺利, 遇到问题可进qq群交流, 虽然不一定会回hhh
 # Presented by 鐘
-
