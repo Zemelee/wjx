@@ -351,9 +351,10 @@ def run(xx, yy):
     while not stop:
         ip = zanip()
         if validate(ip):
+            print(f"IP设置成功  -->  ", end="")
             option.add_argument(f'--proxy-server={ip}')
         else:
-            print("IP设置失败")
+            print("IP设置失败，将使用本机ip填写 -->  ", end="")
         driver = webdriver.Chrome(options=option)
         driver.set_window_size(550, 650)
         driver.set_window_position(x=xx, y=yy)
@@ -373,10 +374,10 @@ def run(xx, yy):
         except:
             traceback.print_exc()
             fail += 1
-            logging.warning(f"失败{fail}次------------------------------")
+            logging.warning(f"已失败{fail}次,失败超过8次(左右)将强制停止------------------------------")
             if fail >= 8:  # 失败阈值
                 stop = True
-                logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，检查代码是否正确')
+                logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确')
                 quit()
             driver.quit()
             continue
@@ -390,11 +391,12 @@ if __name__ == "__main__":
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
     thread_1 = Thread(target=run, args=(50, 50))
     thread_1.start()
-    # thread_2 = Thread(target=run, args=(650, 50))
-    # thread_2.start()
+    thread_2 = Thread(target=run, args=(650, 50))
+    thread_2.start()
     # thread_3 = Thread(target=run, args=(650, 280))
     # thread_3.start()
 
-# 总结,你需要修改的有: ①每个题的比例参数 ②ip链接 ③问卷链接 ④如果对速度有要求则可以多设置几个浏览器
-# 祝君顺利, 遇到问题可进qq群交流, 虽然我不一定会回hhh
+# 总结,你需要修改的有: 1 每个题的比例参数  2 ip链接  3 问卷链接  4 如果对速度有要求则可以多设置几个浏览器
+# 祝君顺利, 遇到问题可进qq群交流, 虽然不一定会回hhh
 # Presented by 鐘
+
