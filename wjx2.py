@@ -159,10 +159,13 @@ if __name__ == "__main__":
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
     thread_1 = Thread(target=run, args=(50, 50))
     thread_1.start()
+    thread_1.join()
     thread_2 = Thread(target=run, args=(650, 50))
     thread_2.start()
+    thread_2.join()
     # thread_3 = Thread(target=run, args=(650, 280))
     # thread_3.start()
+    # thread_3.join()
 
 """
 总结,你需要修改的有: 1 每个题的比例参数(必改)  2 问卷链接(必改)  3 ip链接(可选)  4 浏览器窗口数量(可选)
