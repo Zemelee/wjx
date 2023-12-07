@@ -14,7 +14,7 @@ from selenium.webdriver.common.by import By
 
 def zanip():
     # 这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可
-    api = "https://service.ipzan.com/core-extract?num=1&no=?????&minute=1&area=?????&pool=quality&secret=?????"
+    api = "https://service.ipzan.com/core-extract?num=1&no=???&minute=1&area=all&pool=quality&secret=???"
     ip = requests.get(api).text
     return ip
 
@@ -54,7 +54,7 @@ texts = {"8": ["内容1", "内容2", " 内容3"], }
 texts_prob = {"8": [1, 1, 1]}
 
 # --------------到此为止，参数设置完毕，可以直接运行啦！-------------------
-# 如果需要设置浏览器窗口数量，请转到363行的main函数，注意看里面的注释喔！
+# 如果需要设置浏览器窗口数量，请转到最后一个函数(main函数)，注意看里面的注释喔！
 
 
 # 参数归一化，把概率值按比例缩放到概率值和为1，比如某个单选题[1,2,3,4]会被转化成[0.1,0.2,0.3,0.4],[1,1]会转化成[0.5,0.5]
@@ -80,7 +80,7 @@ print("多选题参数: ", multiple_prob)
 print("矩阵题参数: ", matrix_prob)
 print("量表题参数: ", scale_prob)
 print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理, 并不保证高信效度。")
-print("如果对信效度有要求可以进群找作者代刷, 信效度max。")
+print("如果对信效度有要求可以进群找作者代刷, 信效度max.")
 
 
 # 校验IP地址合法性
@@ -315,7 +315,6 @@ def submit(driver):
         pass
 
 
-# 下面这个函数可以不用管，也没什么值得修改的地方
 def run(xx, yy):
     # 躲避智能检测，将webDriver设置为false
     option = webdriver.ChromeOptions()
@@ -327,10 +326,7 @@ def run(xx, yy):
     while not stop:
         ip = zanip()
         if validate(ip):
-            print(f"IP设置成功  -->  ", end="")
             option.add_argument(f'--proxy-server={ip}')
-        else:
-            print("IP设置失败，将使用本机ip填写 -->  ", end="")
         driver = webdriver.Chrome(options=option)
         driver.set_window_size(550, 650)
         driver.set_window_position(x=xx, y=yy)
@@ -364,6 +360,10 @@ if __name__ == "__main__":
     count = 0  # 记录已刷份数
     fail = 0  # 失败次数
     stop = False
+    if validate(zanip()):
+        print("IP设置成功, 将使用代理ip填写")
+    else:
+        print("IP设置失败, 将使用本机ip填写")
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
     thread_1 = Thread(target=run, args=(50, 50))
     thread_2 = Thread(target=run, args=(650, 50))
@@ -379,5 +379,7 @@ if __name__ == "__main__":
 
 """
     总结,你需要修改的有: 1 每个题的比例参数(必改)  2 问卷链接(必改)  3 ip链接(可选)  4 浏览器窗口数量(可选)
+    有疑问可以加qq群喔: 774326264 || 427847187 ; 
+    如果某个满了请加另一个群; 虽然我不一定回hhh, 但是群友们不一定不回;另外，我不是群主和管理哈！
     Presented by 鐘
 """
