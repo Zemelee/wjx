@@ -23,9 +23,10 @@ from selenium.webdriver.common.by import By
 相关系列教程：https://space.bilibili.com/29109990/channel/collectiondetail?sid=1340503&ctype=0
 
 代码使用规则：
-    你需要提前安装python环境，且已具备上述的所有安装包（selenium版本号需要和webdriver匹配）
-    还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
-    按要求填写概率值并替换成自己的问卷链接即可运行。
+    你需要提前安装python环境，且已具备上述的所有安装包
+    还需要下载好chrome的webDriver自动化工具（chrome版本号需要和chromedriver匹配，具体参考教程）
+    并将webDriver放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
+    按要求填写比例值并替换成自己的问卷链接即可运行你的问卷。
     虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
     如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
 """
