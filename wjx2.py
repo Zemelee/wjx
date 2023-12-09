@@ -24,8 +24,8 @@ from selenium.webdriver.common.by import By
 
 代码使用规则：
     你需要提前安装python环境，且已具备上述的所有安装包
-    还需要下载好chrome的webDriver自动化工具（chrome版本号需要和chromedriver匹配，具体参考教程）
-    并将webDriver放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
+    还需要下载好chrome的chromeDriver自动化工具（chrome版本号需要和chromedriver匹配，具体参考教程）
+    并将chromeDriver放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
     按要求填写比例值并替换成自己的问卷链接即可运行你的问卷。
     虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
     如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
@@ -61,7 +61,7 @@ url = 'https://www.wjx.cn/vm/OM6GYNV.aspx#'
 single_prob = {"1": [1, 1, 0], "2": -1, "3": -1, "4": -1, "5": -1, "6": [1, 0], }
 
 # 下拉框参数，具体含义参考单选题，如果没有下拉框题也不要删，就让他躺在这儿吧，其他题也是哦，没有就不动他，别删，只改你有的题型的参数就好啦
-droplist_prob = {"1": [1, 1, 1]}
+droplist_prob = {"1": [2, 1, 1]}
 
 # 多选题概率参数,0不选该选项，100必选，[10, 50]表示1:5,-1表示随机，
 multiple_prob = {"9": [100, 2, 1, 1]}
@@ -183,7 +183,7 @@ def droplist(driver, current, index):
     driver.find_element(By.XPATH, f"//*[@id='select2-q{current}-results']/li[{r + 1}]").click()
 
 
-# 多选题处理函数：这个超复杂，要不是chatgpt我一辈子都写不出这代码
+# 多选题处理函数；这个略复杂。。我都被写晕了
 def multiple(driver, current, index):
     xpath = f'//*[@id="div{current}"]/div[2]/div'
     options = driver.find_elements(By.XPATH, xpath)
@@ -282,7 +282,7 @@ def brush(driver):
     for j in q_list:  # 遍历每一页
         for k in range(1, j + 1):  # 遍历该页的每一题
             current += 1
-            # 判断题型
+            # 判断题型 md, python没有switch-case语法
             q_type = driver.find_element(By.CSS_SELECTOR, f'#div{current}').get_attribute("type")
             if q_type == "1" or q_type == "2":  # 填空题
                 vacant(driver, current, vacant_num)
@@ -345,7 +345,6 @@ def submit(driver):
 
 
 def run(xx, yy):
-    # 躲避智能检测，将webDriver设置为false
     option = webdriver.ChromeOptions()
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
     option.add_experimental_option('useAutomationExtension', False)
@@ -353,8 +352,8 @@ def run(xx, yy):
     global stop
     global fail  # 失败次数
     while not stop:
-        ip = zanip()
-        if validate(ip):
+        if useIp:
+            ip = zanip()
             option.add_argument(f'--proxy-server={ip}')
         driver = webdriver.Chrome(options=option)
         driver.set_window_size(550, 650)
@@ -388,9 +387,11 @@ def run(xx, yy):
 if __name__ == "__main__":
     count = 0  # 记录已刷份数
     fail = 0  # 失败次数
+    useIp = False  # useIp变量，是我为这个程序做的最极致的优化（2023.12.09）
     stop = False
     if validate(zanip()):
         print("IP设置成功, 将使用代理ip填写")
+        useIp = True
     else:
         print("IP设置失败, 将使用本机ip填写")
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
