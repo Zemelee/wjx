@@ -30,6 +30,13 @@ from selenium.webdriver.common.by import By
     虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
     如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
 """
+"""
+看我这么努力的份儿上，功能这么齐全的份儿上，如果有帮到你可不可以浅浅赞赏一下[泪目][泪目][泪目]
+又是敲py版又敲js版，又是录视频教程的，累死我啦~！
+我的赞赏码是： https://github.com/Zemelee/wjx/blob/master/blacksugar.jpg
+以便祭奠我死去的10086根头发呜呜呜。当然不给也可以用喔。谢谢大大！谢谢大大！
+"""
+
 
 """
 获取代理ip，这里要使用到一个叫“品赞ip”的第三方服务: https://www.ipzan.com?pid=ggj6roo98
@@ -39,8 +46,6 @@ from selenium.webdriver.common.by import By
 设置完成后，不要问为什么和视频教程有点不一样，因为与时俱进！(其实是因为懒，毕竟代码改起来容易，视频录起来不容易嘿嘿2023.10.29)
 如果不需要ip可不设置，也不影响此程序直接运行（悄悄提醒，品赞ip每周可以领3块钱）
 """
-
-
 def zanip():
     # 这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可
     api = "https://service.ipzan.com/core-extract?num=1&no=???&minute=1&area=all&pool=quality&secret=???"
