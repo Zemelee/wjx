@@ -1,4 +1,4 @@
-#美其名曰《问卷星数据收集系统》
+# 美其名曰《问卷星数据收集系统》
 
 ## 简介
 该项目利用 Selenium 自动填写问卷，支持 IP 切换、每道题选项比例定制、多窗口同时填写问卷。
@@ -18,6 +18,6 @@
 ## 配置文件说明
 见后续更新
 
-![alt text](http://m.qpic.cn/psc?/V532vign3NjkvZ35dIQx2uX3fa3aVAL4/ruAMsa53pVQWN7FLK88i5lSfTSQ6OF08BFA*M9LlwqQ3sgiX11ixWCwmBPJ6thBQwTupLBdc7M.vWJglrkJH5zoCMc6LTr4BwpudP.kNd*0!/b&bo=QAbcAgAAAAABB7g!&rf=viewer_4)
+![teach](http://m.qpic.cn/psc?/V532vign3NjkvZ35dIQx2uX3fa3aVAL4/ruAMsa53pVQWN7FLK88i5lSfTSQ6OF08BFA*M9LlwqQ3sgiX11ixWCwmBPJ6thBQwTupLBdc7M.vWJglrkJH5zoCMc6LTr4BwpudP.kNd*0!/b&bo=QAbcAgAAAAABB7g!&rf=viewer_4 "看我看我！！！！")
 
-不会使用可以找作者代刷哦！！！！联系方式见QQ群：774326264 || 427847187
+> 不会使用可以找作者代刷哦！！！！联系方式见QQ群：774326264 || 427847187
