@@ -10,9 +10,26 @@
 
 ## 使用方法
 安装 Python 环境和 Selenium 库。
-将项目 clone 到本地 
-`git clone https://github.com/Zemelee/wjx.git`
-运行 wjx2.py 文件即可开始填写问卷
+将项目 clone 到本地  
+
+`git clone https://github.com/Zemelee/wjx.git` 
+
+或者直接copy到编辑器里
+
+你还需要安装一些必备的库，执行下面这行命令：
+
+`pip3 install -r requirements.txt`
+
+###如果试运行报错，可能是库版本的问题，可以尝试其他版本的库再运（因为代码是没有问题的）
+
+还需要将chrome_driver放在Chrome和python的安装目录  
+
+不同chrome版本的驱动文件不同，具体参考教程，需要去官网下载驱动文件  
+
+最新链接已经准备好了:[click me to download chrome_driver](https://googlechromelabs.github.io/chrome-for-testing/)  
+
+
+运行 wjx2.py 文件即可开始填写问卷  
 
 
 ## 配置文件说明
