@@ -17,7 +17,7 @@ from selenium.webdriver.common.by import By
 """
 
 """
-任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐心，随缘了2023.5.5）
+任何疑问，请加qq群咨询：774326264 || 427847187   我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐心，随缘了2023.5.5）
 代码前身可能更容易理解一点：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  使用教程： https://www.bilibili.com/video/BV1qc411T7CG/
 除了python，作者还发布了js版脚本在greasy fork上，名字就叫“问卷星脚本”，不带任何前后缀，使用可能比py更方便且支持跳题逻辑；
 相关系列教程：https://space.bilibili.com/29109990/channel/collectiondetail?sid=1340503&ctype=0
@@ -30,13 +30,6 @@ from selenium.webdriver.common.by import By
     虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
     如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
 """
-"""
-看我这么努力的份儿上，功能这么齐全的份儿上，如果有帮到你可不可以浅浅赞赏一下[泪目][泪目][泪目]
-又是敲py版又敲js版，又是录视频教程的，累死我啦~！
-我的赞赏码是： https://github.com/Zemelee/wjx/blob/master/blacksugar.jpg
-以便祭奠我死去的10086根头发呜呜呜。当然不给也可以用喔。谢谢大大！谢谢大大！
-"""
-
 
 """
 获取代理ip，这里要使用到一个叫“品赞ip”的第三方服务: https://www.ipzan.com?pid=ggj6roo98
