@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 
 """
     @Author:鐘
-    @Time:2023.11
+    @Time:2024.4
 """
 
 """
@@ -61,11 +61,12 @@ single_prob = {"1": [1, 1, 0], "2": -1, "3": -1, "4": -1, "5": -1, "6": [1, 0], 
 # 下拉框参数，具体含义参考单选题，如果没有下拉框题也不要删，就让他躺在这儿吧，其他题也是哦，没有就不动他，别删，只改你有的题型的参数就好啦
 droplist_prob = {"1": [2, 1, 1]}
 
-# 多选题概率参数,0不选该选项，100必选，[10, 50]表示1:5,-1表示随机，
-multiple_prob = {"9": [100, 2, 1, 1]}
+# 此参数和视频演示不一致！！
+# 表示每个选项选择的概率，100表示必选，30表示选择B的概率为30；不能写[1,1,1,1]这种比例了，不然含义为选ABCD的概率均为1%
+# 最好保证概率和加起来大于100
+multiple_prob = {"9": [100, 30, 23, 43]}
 # 多选题选择的选项数量（去除必选后的数），这里填1与上面的multiple_prob表示在必选A后，会再从BCD中选1个选项
-# 注意！！！如果选项数量比较少，建议多选的数量参数不要太大，因为数量参数值越大，最后刷出来的数据分布误差越大！！！4个选项建议选1-2个即可。
-multiple_opts = {"9": 1, }
+# multiple_opts = {"9": 1, }   此参数已失效，可不必理会2024.3.28
 
 # 矩阵题概率参数,-1表示随机，其他含义参考单选题；同样的，题号不重要，保证第几个参数对应第几个矩阵小题就可以了；
 # 在示例问卷中矩阵题是第10题，每个小题都要设置概率值才行！！以下参数表示第二题随机，其余题全选A
@@ -79,6 +80,9 @@ scale_prob = {"7": [0, 2, 3, 4, 1], "12": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]}
 texts = {"8": ["内容1", "内容2", " 内容3"], }
 # 每个内容对应的概率1:1:1,
 texts_prob = {"8": [1, 1, 1]}
+
+# 排序题不支持设置参数，如果有排序题程序会自动处理
+# 滑块题没支持参数，程序能自动处理部分滑块题
 
 # --------------到此为止，参数设置完毕，可以直接运行啦！-------------------
 # 如果需要设置浏览器窗口数量，请转到最后一个函数(main函数)，注意看里面的注释喔！
@@ -95,7 +99,6 @@ for prob in [single_prob, matrix_prob, droplist_prob, scale_prob, texts_prob]:
 single_prob = list(single_prob.values())
 droplist_prob = list(droplist_prob.values())
 multiple_prob = list(multiple_prob.values())
-multiple_opts = list(multiple_opts.values())
 matrix_prob = list(matrix_prob.values())
 scale_prob = list(scale_prob.values())
 texts_prob = list(texts_prob.values())
@@ -108,7 +111,7 @@ print("矩阵题参数: ", matrix_prob)
 print("量表题参数: ", scale_prob)
 print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理, 并不保证高信效度。")
 print("如果对信效度有要求可以进群找作者代刷, 信效度max.")
-
+print("如果程序对你有帮助，请给我一个免费的star~!")
 
 # 校验IP地址合法性
 def validate(ip):
@@ -164,6 +167,9 @@ def single(driver, current, index):
     if p == -1:
         r = random.randint(1, len(a))
     else:
+        if len(p) != len(a):
+            print(f"第{current}题参数数量：{len(p)},选项数量{len(a)},不一致！")
+            return
         r = numpy.random.choice(a=numpy.arange(1, len(a) + 1), p=p)
     driver.find_element(By.CSS_SELECTOR,
                         f'#div{current} > div.ui-controlgroup > div:nth-child({r})').click()
@@ -181,44 +187,26 @@ def droplist(driver, current, index):
     driver.find_element(By.XPATH, f"//*[@id='select2-q{current}-results']/li[{r + 1}]").click()
 
 
-# 多选题处理函数；这个略复杂。。我都被写晕了
 def multiple(driver, current, index):
     xpath = f'//*[@id="div{current}"]/div[2]/div'
     options = driver.find_elements(By.XPATH, xpath)
-    # 第current题对应的概率值
-    probabilities = multiple_prob[index]
-    if probabilities == 0:  # 不选
+    mul_list = []
+    p = multiple_prob[index]
+    if len(options) != len(p):
+        print(f"第{current}题概率值和选项值不一致")
         return
-    elif probabilities == -1:  # 随机
-        r = random.randint(1, len(options))
-        driver.find_element(By.CSS_SELECTOR,
-                            f'#div{current} > div.ui-controlgroup > div:nth-child({r})').click()
-    else:
-        prob_copy = probabilities.copy()
-        opts_num = multiple_opts[index]  # 第current题对应的选项数量参数
-        for i in prob_copy:  # 如果存在列表中概率为100的项，则直接选择该项
-            if i == 100:
-                # 找到100元素位置
-                sure = prob_copy.index(i)
-                driver.find_element(By.CSS_SELECTOR,
-                                    f'#div{current} > div.ui-controlgroup > div:nth-child({sure + 1})').click()
-                # 将已选的概率修改为0，以便在后面按概率选择其他选项
-                prob_copy[sure] = 0
-        # 计算不为0的数值总和
-        total = sum([num for num in prob_copy])
-        if total == 0: return
-        # 将不为0的数值归一化
-        probabilities_norm = [num / total if num != 0 else 0 for num in prob_copy]
-        # 从位置1到列表长度之间随机选择 opts_num - 已选数 相同数量的选项
-        selection_indices = numpy.random.choice(
-            range(len(options)),
-            size=opts_num,
-            replace=False,
-            p=probabilities_norm)
-        # 选择随机选择的选项
-        for i in selection_indices:
-            driver.find_element(By.CSS_SELECTOR,
-                                f'#div{current} > div.ui-controlgroup > div:nth-child({i + 1})').click()
+    # 生成序列,同时保证至少有一个1
+    while sum(mul_list) <= 1:
+        mul_list = []
+        for item in p:
+            a = numpy.random.choice(a=numpy.arange(0, 2), p=[1 - (item / 100), item / 100])
+            mul_list.append(a)
+    # 依次点击
+    for (index, item) in enumerate(mul_list):
+        if item == 1:
+            css = f"#div{current} > div.ui-controlgroup > div:nth-child({index + 1})"
+            driver.find_element(By.CSS_SELECTOR, css).click()
+
 
 
 # 矩阵题处理函数
@@ -356,6 +344,7 @@ def run(xx, yy):
         driver = webdriver.Chrome(options=option)
         driver.set_window_size(550, 650)
         driver.set_window_position(x=xx, y=yy)
+        # 有学过vue2的吗, Object.defineProperty 这个 api 是不是很眼熟啊哈哈哈
         driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument',
                                {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'})
         try:
