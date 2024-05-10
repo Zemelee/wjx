@@ -364,7 +364,7 @@ def run(xx, yy):
             lock.acquire()
             fail += 1
             lock.release()
-            logging.warning(f"已失败{fail}次,失败超过10次(左右)将强制停止------------------------------")
+            logging.warning('\033[42m', f"已失败{fail}次,失败超过10次(左右)将强制停止", '\033[0m')
             if fail >= 10:  # 失败阈值
                 stop = True
                 logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确')
