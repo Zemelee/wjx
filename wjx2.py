@@ -362,8 +362,7 @@ def run(xx, yy):
             curFail += 1
             lock.release()
             print('\033[42m', f"已失败{curFail}次,失败超过{topFail}次(左右)将强制停止", '\033[0m')
-            if curFail >= 10:  # 失败阈值
-                stop = True
+            if curFail >= topFail:  # 失败阈值
                 logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确')
                 quit()
             driver.quit()
@@ -373,7 +372,7 @@ def run(xx, yy):
 # 多线程执行run函数
 if __name__ == "__main__":
     targetCount = 6  # 目标份数
-    topFail = 3  # 失败阈值
+    topFail = 3  # 失败阈值，若失败总数超过3次则强制停止程序；数值可自行修改
     curCount = 0  # 已提交份数
     curFail = 0  # 已失败次数
     lock = threading.Lock()
