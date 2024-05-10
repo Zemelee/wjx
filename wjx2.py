@@ -1,6 +1,7 @@
 import logging
 import random
 import re
+import threading
 import traceback
 from threading import Thread
 import time
@@ -360,7 +361,9 @@ def run(xx, yy):
                 driver.quit()
         except:
             traceback.print_exc()
+            lock.acquire()
             fail += 1
+            lock.release()
             logging.warning(f"已失败{fail}次,失败超过10次(左右)将强制停止------------------------------")
             if fail >= 10:  # 失败阈值
                 stop = True
@@ -374,6 +377,7 @@ def run(xx, yy):
 if __name__ == "__main__":
     count = 0  # 记录已刷份数
     fail = 0  # 失败次数
+    lock = threading.Lock()
     useIp = False  # useIp变量，是我为这个程序做的最极致的优化（2023.12.09）
     stop = False
     if validate(zanip()):
