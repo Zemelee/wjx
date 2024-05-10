@@ -39,7 +39,10 @@ from selenium.webdriver.common.by import By
 然后点击生成api，将链接复制到放在zanip函数里
 设置完成后，不要问为什么和视频教程有点不一样，因为与时俱进！(其实是因为懒，毕竟代码改起来容易，视频录起来不容易嘿嘿2023.10.29)
 如果不需要ip可不设置，也不影响此程序直接运行（悄悄提醒，品赞ip每周可以领3块钱）
+需要国外代理(美其名曰科学上网)也可联系作者喔！
 """
+
+
 def zanip():
     # 这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可
     api = "https://service.ipzan.com/core-extract?num=1&no=???&minute=1&area=all&pool=quality&secret=???"
@@ -66,7 +69,6 @@ droplist_prob = {"1": [2, 1, 1]}
 # 表示每个选项选择的概率，100表示必选，30表示选择B的概率为30；不能写[1,1,1,1]这种比例了，不然含义为选ABCD的概率均为1%
 # 最好保证概率和加起来大于100
 multiple_prob = {"9": [100, 30, 23, 43]}
-# 多选题选择的选项数量（去除必选后的数），这里填1与上面的multiple_prob表示在必选A后，会再从BCD中选1个选项
 # multiple_opts = {"9": 1, }   此参数已失效，可不必理会2024.3.28
 
 # 矩阵题概率参数,-1表示随机，其他含义参考单选题；同样的，题号不重要，保证第几个参数对应第几个矩阵小题就可以了；
@@ -105,14 +107,10 @@ scale_prob = list(scale_prob.values())
 texts_prob = list(texts_prob.values())
 texts = list(texts.values())
 
-print("单选题参数: ", single_prob)
-print("下拉框参数: ", droplist_prob)
-print("多选题参数: ", multiple_prob)
-print("矩阵题参数: ", matrix_prob)
-print("量表题参数: ", scale_prob)
 print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理, 并不保证高信效度。")
-print("如果对信效度有要求可以进群找作者代刷, 信效度max.")
+print("如果对信效度有要求可以进群找群主代刷。")
 print("如果程序对你有帮助，请给我一个免费的star~!")
+
 
 # 校验IP地址合法性
 def validate(ip):
@@ -207,7 +205,6 @@ def multiple(driver, current, index):
         if item == 1:
             css = f"#div{current} > div.ui-controlgroup > div:nth-child({index + 1})"
             driver.find_element(By.CSS_SELECTOR, css).click()
-
 
 
 # 矩阵题处理函数
@@ -335,10 +332,9 @@ def run(xx, yy):
     option = webdriver.ChromeOptions()
     option.add_experimental_option('excludeSwitches', ['enable-automation'])
     option.add_experimental_option('useAutomationExtension', False)
-    global count
-    global stop
-    global fail  # 失败次数
-    while not stop:
+    global curCount
+    global curFail
+    while curCount < targetCount:
         if useIp:
             ip = zanip()
             option.add_argument(f'--proxy-server={ip}')
@@ -356,16 +352,17 @@ def run(xx, yy):
             time.sleep(4)
             url2 = driver.current_url  # 表示问卷填写完成后跳转的链接，一旦跳转说明填写成功
             if url1 != url2:
-                count += 1
-                print(f"已填写{count}份 - 失败{fail}次 - {time.strftime('%H:%M:%S', time.localtime(time.time()))} ")
+                curCount += 1
+                print(
+                    f"已填写{curCount}份 - 失败{curFail}次 - {time.strftime('%H:%M:%S', time.localtime(time.time()))} ")
                 driver.quit()
         except:
             traceback.print_exc()
             lock.acquire()
-            fail += 1
+            curFail += 1
             lock.release()
-            logging.warning('\033[42m', f"已失败{fail}次,失败超过10次(左右)将强制停止", '\033[0m')
-            if fail >= 10:  # 失败阈值
+            print('\033[42m', f"已失败{curFail}次,失败超过{topFail}次(左右)将强制停止", '\033[0m')
+            if curFail >= 10:  # 失败阈值
                 stop = True
                 logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确')
                 quit()
@@ -375,8 +372,10 @@ def run(xx, yy):
 
 # 多线程执行run函数
 if __name__ == "__main__":
-    count = 0  # 记录已刷份数
-    fail = 0  # 失败次数
+    targetCount = 6  # 目标份数
+    topFail = 3  # 失败阈值
+    curCount = 0  # 已提交份数
+    curFail = 0  # 已失败次数
     lock = threading.Lock()
     useIp = False  # useIp变量，是我为这个程序做的最极致的优化（2023.12.09）
     stop = False
