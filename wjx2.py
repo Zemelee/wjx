@@ -120,32 +120,14 @@ def validate(ip):
     return False
 
 
-# 检测题量和页数的函数，返回一个列表，第一个数表示第一页的题量，第二个数表示第二页的题量；比如示例问卷会返回：[3, 2, 2, 7]
-# 虽然但是，我见识过问卷星再没有跳题逻辑的情况下有题被隐藏，我当时就??????
-# 这会导致detect返回包含被隐藏的题，数值可能偏高，比如可见题目[3, 2, 2, 7]被detect成[4, 2, 2, 7]。。
+# 检测题量
 def detect(driver):
-    q_list = []  # 长度等于页数，数字代表该页的题数
-    xpath = '//*[@id="divQuestion"]/fieldset'
-    page_num = len(driver.find_elements(By.XPATH, xpath))  # 页数
-    qs = driver.find_elements(By.XPATH, f'//*[@id="fieldset1"]/div')  # 每一页的题
-    invalid_item = 0  # 无效问题数量
-    for qs_item in qs:
-        # 判断其topic属性值是否值包含数字
-        if qs_item.get_attribute("topic").isdigit() is False:
-            invalid_item += 1
-    # 如果只有1页
-    q_list.append(len(qs) - invalid_item)
-    if page_num >= 2:
-        for i in range(2, page_num + 1):
-            qs = driver.find_elements(By.XPATH, f'//*[@id="fieldset{i}"]/div')
-            invalid_item = 0  # 每一页的无效问题初始值为0
-            # 遍历每一个div，判断其是否可以回答
-            for qs_item in qs:
-                # 判断其topic属性值是否值包含数字，因为只有题的div的topic属性才是纯数字
-                if qs_item.get_attribute("topic").isdigit() is False:
-                    invalid_item += 1
-            # [3, 2, 2, 7]
-            q_list.append(len(qs) - invalid_item)
+    q_list = []
+    page_num = len(driver.find_elements(By.XPATH, '//*[@id="divQuestion"]/fieldset'))
+    for i in range(1, page_num + 1):
+        questions = driver.find_elements(By.XPATH, f'//*[@id="fieldset{i}"]/div')
+        valid_count = sum(1 for question in questions if question.get_attribute("topic").isdigit())
+        q_list.append(valid_count)
     return q_list
 
 
