@@ -18,7 +18,7 @@ from selenium.webdriver.common.by import By
 """
 
 """
-任何疑问，请加qq群咨询：774326264 || 427847187   我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐心，随缘了2023.5.5）
+任何疑问，请加qq群咨询：774326264 || 427847187 || 850281779  我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐心，随缘了2023.5.5）
 代码前身可能更容易理解一点：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  使用教程： https://www.bilibili.com/video/BV1qc411T7CG/
 除了python，作者还发布了js版脚本在greasy fork上，名字就叫“问卷星脚本”，不带任何前后缀，使用可能比py更方便且支持跳题逻辑；
 相关系列教程：https://space.bilibili.com/29109990/channel/collectiondetail?sid=1340503&ctype=0
