@@ -51,6 +51,7 @@ def zanip():
 
 
 # 示例问卷,试运行结束后,需要改成你的问卷地址
+# 一个勉强能用的代刷网站： http://sugarblack.top/dist
 url = 'https://www.wjx.cn/vm/OM6GYNV.aspx#'
 
 """
