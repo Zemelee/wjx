@@ -10,7 +10,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/localforage/1.7.3/localforage.min.js
 // @namespace    https://greasyfork.org/users/1079332
 // ==/UserScript==
- 
+//本脚本安装地址：https://greasyfork.org/zh-CN/scripts/466722-%E9%97%AE%E5%8D%B7%E6%98%9F%E8%84%9A%E6%9C%AC/code
 localStorage.clear();
 sessionStorage.clear();
 console.log("Storage已清除!")
