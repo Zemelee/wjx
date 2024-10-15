@@ -8,9 +8,9 @@ from selenium.webdriver.common.by import By
 
 """
 readme:
-    任何疑问，请加qq群咨询：427847187   我看到了一定会耐心解答的！！！
+    任何疑问，请加qq群咨询：427847187 || 774326264 || 850281779   我看到了一定会耐心解答的！！！
     代码使用规则：
-        你需要提前安装python环境，且已具备上述的所有安装包（笔者的selenium版本号：3.141.0，版本号是3就可以，其余安装包默认即可）
+        你需要提前安装python环境，且已具备上述的所有安装包（selenium版本需要大于3，不过现在下载的基本都默认大于3）
         还需要下载好chrome的webDriver自动化工具，并将其放在python安装目录下，以便和selenium配套使用
     代码原理:
         通过html标签定位到每一道题，再按指定概率点击每道题的选项（意思是可以刷出你想要的数据分布！！！）
@@ -19,8 +19,7 @@ readme:
         后续会添加代理功能，以实现提交ip的指定，敬请期待（2023.3.1）（划掉）
         ip代理、多窗口同时填写、不关闭浏览器持续填写、翻页、更多题型，题型封装已经实现，直接扔问卷链接和概率值就可以刷了
         对小白十分友好，嘎嘎乱杀问卷星，可是代码付费哈哈哈，毕竟我后来敲了很久呢~~（2023.4.4）。
-        最新代码已升级到：https://github.com/Zemelee/wjx/edit/master/wjx2.py   --->免费了，气死了，就一个人买了代码（2023.05.04）
-        啊这代码我敲了很久呢，如果有帮到你可不可以浅浅赞赏一下，我的赞赏码是： https://github.com/Zemelee/wjx/blob/master/blacksugar.jpg
+        最新代码已升级到：https://github.com/Zemelee/wjx/blob/master/wjx2.py   --->免费了，气死了，就一个人买了代码（2023.05.04）
         以便祭奠我死去的10086根头发，我还是个眼神充满清澈愚蠢的大学生[泪目][泪目][泪目][泪目][泪目]
     最后的最后：
         如果对代码有任何疑问，欢迎在平台（不是指github）上私我，我看到后会尽快给出解答
@@ -28,6 +27,7 @@ readme:
 """
 
 # 用户测试的问卷，不会暂停，可放心填写提交
+#  一个可以在线刷问卷的网站: sugarblack.top  （超好用嘿嘿，有备案的！正经网站
 url = 'https://www.wjx.cn/vm/QaaZ20B.aspx#'
 # 数据查看链接，密码：1234
 # https://www.wjx.cn/wjx/activitystat/verifyreportpassword.aspx?viewtype=1&activity=209176245&type=1
