@@ -304,9 +304,10 @@ def submit(driver):
     # 滑块验证
     try:
         slider = driver.find_element(By.XPATH, '//*[@id="nc_1__scale_text"]/span')
+        sliderButton = driver.find_element(By.XPATH, '//*[@id="nc_1_n1z"]')
         if str(slider.text).startswith("请按住滑块"):
             width = slider.size.get('width')
-            ActionChains(driver).drag_and_drop_by_offset(slider, width, 0).perform()
+            ActionChains(driver).drag_and_drop_by_offset(sliderButton, width, 0).perform()
     except:
         pass
 
