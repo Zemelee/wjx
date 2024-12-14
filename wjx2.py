@@ -5,10 +5,12 @@ import threading
 import traceback
 from threading import Thread
 import time
+from typing import List
 
 import numpy
 import requests
 from selenium import webdriver
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 
@@ -51,8 +53,8 @@ def zanip():
 
 
 # 示例问卷,试运行结束后,需要改成你的问卷地址
-# 一个勉强能用的代刷网站： http://sugarblack.top
-url = 'https://www.wjx.cn/vm/OM6GYNV.aspx#'
+# 一个可以代刷问卷星的网站： http://sugarblack.top
+url = "https://www.wjx.cn/vm/OM6GYNV.aspx#"
 
 """
 单选题概率参数，"1"表示第一题，0表示不选， [30, 70]表示3:7，-1表示随机
@@ -61,7 +63,14 @@ url = 'https://www.wjx.cn/vm/OM6GYNV.aspx#'
 最重要的其实是保证single_prob的第n个参数对应第n个单选题，比如在示例问卷中第5题是滑块题，但是我single_prob却有“第5题”，因为这个"5"其实对应的是第5个单选题，也就是问卷中的第6题
 这个single_prob的"5"可以改成其他任何值，当然我不建议你这么干，因为问卷中只有5个单选题，所以第6个单选题的参数其实是没有用上的，参数只能多不能少！！！（这一点其他类型的概率参数也适用）
 """
-single_prob = {"1": [1, 1, 0], "2": -1, "3": -1, "4": -1, "5": -1, "6": [1, 0], }
+single_prob = {
+    "1": [1, 1, 0],
+    "2": -1,
+    "3": -1,
+    "4": -1,
+    "5": -1,
+    "6": [1, 0],
+}
 
 # 下拉框参数，具体含义参考单选题，如果没有下拉框题也不要删，就让他躺在这儿吧，其他题也是哦，没有就不动他，别删，只改你有的题型的参数就好啦
 droplist_prob = {"1": [2, 1, 1]}
@@ -74,14 +83,22 @@ multiple_prob = {"9": [100, 30, 23, 43]}
 
 # 矩阵题概率参数,-1表示随机，其他含义参考单选题；同样的，题号不重要，保证第几个参数对应第几个矩阵小题就可以了；
 # 在示例问卷中矩阵题是第10题，每个小题都要设置概率值才行！！以下参数表示第二题随机，其余题全选A
-matrix_prob = {"1": [1, 0, 0, 0, 0], "2": -1, "3": [1, 0, 0, 0, 0], "4": [1, 0, 0, 0, 0],
-               "5": [1, 0, 0, 0, 0], "6": [1, 0, 0, 0, 0]}
+matrix_prob = {
+    "1": [1, 0, 0, 0, 0],
+    "2": -1,
+    "3": [1, 0, 0, 0, 0],
+    "4": [1, 0, 0, 0, 0],
+    "5": [1, 0, 0, 0, 0],
+    "6": [1, 0, 0, 0, 0],
+}
 
 # 量表题概率参数，参考单选题
 scale_prob = {"7": [0, 2, 3, 4, 1], "12": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]}
 
 # 填空题参数，在题号后面按该格式填写需要填写的内容，
-texts = {"8": ["内容1", "内容2", " 内容3"], }
+texts = {
+    "8": ["内容1", "内容2", " 内容3"],
+}
 # 每个内容对应的概率1:1:1,
 texts_prob = {"8": [1, 1, 1]}
 
@@ -95,7 +112,7 @@ texts_prob = {"8": [1, 1, 1]}
 # 参数归一化，把概率值按比例缩放到概率值和为1，比如某个单选题[1,2,3,4]会被转化成[0.1,0.2,0.3,0.4],[1,1]会转化成[0.5,0.5]
 for prob in [single_prob, matrix_prob, droplist_prob, scale_prob, texts_prob]:
     for key in prob:
-        if isinstance(prob[key], list) and prob[key] != -1:
+        if isinstance(prob[key], list):
             prob_sum = sum(prob[key])
             prob[key] = [x / prob_sum for x in prob[key]]
 
@@ -115,34 +132,36 @@ print("如果程序对你有帮助，请给我一个免费的star~!")
 
 # 校验IP地址合法性
 def validate(ip):
-    pattern = r'^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\d{1,5})$'
+    pattern = r"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):(\d{1,5})$"
     if re.match(pattern, ip):
         return True
     return False
 
 
 # 检测题量
-def detect(driver):
-    q_list = []
+def detect(driver: WebDriver) -> List[int]:
+    q_list: List[int] = []
     page_num = len(driver.find_elements(By.XPATH, '//*[@id="divQuestion"]/fieldset'))
     for i in range(1, page_num + 1):
         questions = driver.find_elements(By.XPATH, f'//*[@id="fieldset{i}"]/div')
-        valid_count = sum(1 for question in questions if question.get_attribute("topic").isdigit())
+        valid_count = sum(
+            1 for question in questions if question.get_attribute("topic").isdigit()
+        )
         q_list.append(valid_count)
     return q_list
 
 
 # 填空题处理函数
-def vacant(driver, current, index):
+def vacant(driver: WebDriver, current, index):
     content = texts[index]
     # 对应填空题概率参数
     p = texts_prob[index]
     text_index = numpy.random.choice(a=numpy.arange(0, len(p)), p=p)
-    driver.find_element(By.CSS_SELECTOR, f'#q{current}').send_keys(content[text_index])
+    driver.find_element(By.CSS_SELECTOR, f"#q{current}").send_keys(content[text_index])
 
 
 # 单选题处理函数
-def single(driver, current, index):
+def single(driver: WebDriver, current, index):
     xpath = f'//*[@id="div{current}"]/div[2]/div'
     a = driver.find_elements(By.XPATH, xpath)
     p = single_prob[index]
@@ -153,23 +172,28 @@ def single(driver, current, index):
             print(f"第{current}题参数数量：{len(p)},选项数量{len(a)},不一致！")
             return
         r = numpy.random.choice(a=numpy.arange(1, len(a) + 1), p=p)
-    driver.find_element(By.CSS_SELECTOR,
-                        f'#div{current} > div.ui-controlgroup > div:nth-child({r})').click()
+    driver.find_element(
+        By.CSS_SELECTOR, f"#div{current} > div.ui-controlgroup > div:nth-child({r})"
+    ).click()
 
 
 # 下拉框处理函数
-def droplist(driver, current, index):
+def droplist(driver: WebDriver, current, index):
     # 先点击“请选择”
     driver.find_element(By.CSS_SELECTOR, f"#select2-q{current}-container").click()
     time.sleep(0.5)
     # 选项数量
-    options = driver.find_elements(By.XPATH, f"//*[@id='select2-q{current}-results']/li")
+    options = driver.find_elements(
+        By.XPATH, f"//*[@id='select2-q{current}-results']/li"
+    )
     p = droplist_prob[index]  # 对应概率
     r = numpy.random.choice(a=numpy.arange(1, len(options)), p=p)
-    driver.find_element(By.XPATH, f"//*[@id='select2-q{current}-results']/li[{r + 1}]").click()
+    driver.find_element(
+        By.XPATH, f"//*[@id='select2-q{current}-results']/li[{r + 1}]"
+    ).click()
 
 
-def multiple(driver, current, index):
+def multiple(driver: WebDriver, current, index):
     xpath = f'//*[@id="div{current}"]/div[2]/div'
     options = driver.find_elements(By.XPATH, xpath)
     mul_list = []
@@ -181,17 +205,19 @@ def multiple(driver, current, index):
     while sum(mul_list) <= 1:
         mul_list = []
         for item in p:
-            a = numpy.random.choice(a=numpy.arange(0, 2), p=[1 - (item / 100), item / 100])
+            a = numpy.random.choice(
+                a=numpy.arange(0, 2), p=[1 - (item / 100), item / 100]
+            )
             mul_list.append(a)
     # 依次点击
-    for (index, item) in enumerate(mul_list):
+    for index, item in enumerate(mul_list):
         if item == 1:
             css = f"#div{current} > div.ui-controlgroup > div:nth-child({index + 1})"
             driver.find_element(By.CSS_SELECTOR, css).click()
 
 
 # 矩阵题处理函数
-def matrix(driver, current, index):
+def matrix(driver: WebDriver, current, index):
     xpath1 = f'//*[@id="divRefTab{current}"]/tbody/tr'
     a = driver.find_elements(By.XPATH, xpath1)
     q_num = 0  # 矩阵的题数量
@@ -209,22 +235,26 @@ def matrix(driver, current, index):
             opt = random.randint(2, len(b))
         else:
             opt = numpy.random.choice(a=numpy.arange(2, len(b) + 1), p=p)
-        driver.find_element(By.CSS_SELECTOR, f'#drv{current}_{i} > td:nth-child({opt})').click()
+        driver.find_element(
+            By.CSS_SELECTOR, f"#drv{current}_{i} > td:nth-child({opt})"
+        ).click()
     return index
 
 
 # 排序题处理函数，排序暂时只能随机
-def reorder(driver, current):
+def reorder(driver: WebDriver, current):
     xpath = f'//*[@id="div{current}"]/ul/li'
     a = driver.find_elements(By.XPATH, xpath)
     for j in range(1, len(a) + 1):
         b = random.randint(j, len(a))
-        driver.find_element(By.CSS_SELECTOR, f'#div{current} > ul > li:nth-child({b})').click()
+        driver.find_element(
+            By.CSS_SELECTOR, f"#div{current} > ul > li:nth-child({b})"
+        ).click()
         time.sleep(0.4)
 
 
 # 量表题处理函数
-def scale(driver, current, index):
+def scale(driver: WebDriver, current, index):
     xpath = f'//*[@id="div{current}"]/div[2]/div/ul/li'
     a = driver.find_elements(By.XPATH, xpath)
     p = scale_prob[index]
@@ -232,12 +262,13 @@ def scale(driver, current, index):
         b = random.randint(1, len(a))
     else:
         b = numpy.random.choice(a=numpy.arange(1, len(a) + 1), p=p)
-    driver.find_element(By.CSS_SELECTOR,
-                        f"#div{current} > div.scale-div > div > ul > li:nth-child({b})").click()
+    driver.find_element(
+        By.CSS_SELECTOR, f"#div{current} > div.scale-div > div > ul > li:nth-child({b})"
+    ).click()
 
 
 # 刷题逻辑函数
-def brush(driver):
+def brush(driver: WebDriver):
     q_list = detect(driver)  # 检测页数和每一页的题量
     single_num = 0  # 第num个单选题
     vacant_num = 0  # 第num个填空题
@@ -250,13 +281,17 @@ def brush(driver):
         for k in range(1, j + 1):  # 遍历该页的每一题
             current += 1
             # 判断题型 md, python没有switch-case语法
-            q_type = driver.find_element(By.CSS_SELECTOR, f'#div{current}').get_attribute("type")
+            q_type = driver.find_element(
+                By.CSS_SELECTOR, f"#div{current}"
+            ).get_attribute("type")
             if q_type == "1" or q_type == "2":  # 填空题
                 vacant(driver, current, vacant_num)
-                vacant_num += 1  # 同时将vacant_num+1表示运行vacant函数时该使用texts参数的下一个值
+                # 同时将vacant_num+1表示运行vacant函数时该使用texts参数的下一个值
+                vacant_num += 1
             elif q_type == "3":  # 单选
                 single(driver, current, single_num)
-                single_num += 1  # single_num+1表示运行single函数时该使用single_prob参数的下一个值
+                # single_num+1表示运行single函数时该使用single_prob参数的下一个值
+                single_num += 1
             elif q_type == "4":  # 多选
                 multiple(driver, current, multiple_num)
                 multiple_num += 1
@@ -270,7 +305,7 @@ def brush(driver):
                 droplist_num += 1
             elif q_type == "8":  # 滑块题
                 score = random.randint(1, 100)
-                driver.find_element(By.CSS_SELECTOR, f'#q{current}').send_keys(score)
+                driver.find_element(By.CSS_SELECTOR, f"#q{current}").send_keys(score)
             elif q_type == "11":  # 排序题
                 reorder(driver, current)
             else:
@@ -278,7 +313,7 @@ def brush(driver):
         time.sleep(0.5)
         #  一页结束过后要么点击下一页，要么点击提交
         try:
-            driver.find_element(By.CSS_SELECTOR, '#divNext').click()  # 点击下一页
+            driver.find_element(By.CSS_SELECTOR, "#divNext").click()  # 点击下一页
             time.sleep(0.5)
         except:
             # 点击提交
@@ -287,7 +322,7 @@ def brush(driver):
 
 
 # 提交函数
-def submit(driver):
+def submit(driver: WebDriver):
     time.sleep(1)
     # 点击对话框的确认按钮
     try:
@@ -306,48 +341,62 @@ def submit(driver):
         slider = driver.find_element(By.XPATH, '//*[@id="nc_1__scale_text"]/span')
         sliderButton = driver.find_element(By.XPATH, '//*[@id="nc_1_n1z"]')
         if str(slider.text).startswith("请按住滑块"):
-            width = slider.size.get('width')
-            ActionChains(driver).drag_and_drop_by_offset(sliderButton, width, 0).perform()
+            width = slider.size.get("width")
+            ActionChains(driver).drag_and_drop_by_offset(
+                sliderButton, width, 0
+            ).perform()
     except:
         pass
 
 
 def run(xx, yy):
     option = webdriver.ChromeOptions()
-    option.add_experimental_option('excludeSwitches', ['enable-automation'])
-    option.add_experimental_option('useAutomationExtension', False)
-    global curCount
-    global curFail
-    while curCount < targetCount:
-        if useIp:
+    option.add_experimental_option("excludeSwitches", ["enable-automation"])
+    option.add_experimental_option("useAutomationExtension", False)
+    global cur_num, cur_fail
+    while cur_num < target_num:
+        if use_ip:
             ip = zanip()
-            option.add_argument(f'--proxy-server={ip}')
+            option.add_argument(f"--proxy-server={ip}")
         driver = webdriver.Chrome(options=option)
         driver.set_window_size(550, 650)
         driver.set_window_position(x=xx, y=yy)
-        # 有学过vue2的吗, Object.defineProperty 这个 api 是不是很眼熟啊哈哈哈
-        driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument',
-                               {'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'})
+        # 有学过 vue2 的吗, Object.defineProperty 这个 api 是不是很眼熟啊哈哈哈
+        driver.execute_cdp_cmd(
+            "Page.addScriptToEvaluateOnNewDocument",
+            {
+                "source": 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'
+            },
+        )
         try:
             driver.get(url)
             url1 = driver.current_url  # 表示问卷链接
             brush(driver)
             # 刷完后给一定时间让页面跳转
             time.sleep(4)
-            url2 = driver.current_url  # 表示问卷填写完成后跳转的链接，一旦跳转说明填写成功
+            url2 = (
+                driver.current_url
+            )  # 表示问卷填写完成后跳转的链接，一旦跳转说明填写成功
             if url1 != url2:
-                curCount += 1
+                cur_num += 1
                 print(
-                    f"已填写{curCount}份 - 失败{curFail}次 - {time.strftime('%H:%M:%S', time.localtime(time.time()))} ")
+                    f"已填写{cur_num}份 - 失败{cur_fail}次 - {time.strftime('%H:%M:%S', time.localtime(time.time()))} "
+                )
                 driver.quit()
         except:
             traceback.print_exc()
             lock.acquire()
-            curFail += 1
+            cur_fail += 1
             lock.release()
-            print('\033[42m', f"已失败{curFail}次,失败超过{topFail}次(左右)将强制停止", '\033[0m')
-            if curFail >= topFail:  # 失败阈值
-                logging.critical('失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确')
+            print(
+                "\033[42m",
+                f"已失败{cur_fail}次,失败超过{int(fail_threshold)}次(左右)将强制停止",
+                "\033[0m",
+            )
+            if cur_fail >= fail_threshold:  # 失败阈值
+                logging.critical(
+                    "失败次数过多，为防止耗尽ip余额，程序将强制停止，请检查代码是否正确"
+                )
                 quit()
             driver.quit()
             continue
@@ -355,16 +404,17 @@ def run(xx, yy):
 
 # 多线程执行run函数
 if __name__ == "__main__":
-    targetCount = 6  # 目标份数
-    topFail = 3  # 失败阈值，若失败总数超过3次则强制停止程序；数值可自行修改
-    curCount = 0  # 已提交份数
-    curFail = 0  # 已失败次数
+    target_num = 6  # 目标份数
+    # 失败阈值，数值可自行修改为固定整数
+    fail_threshold = target_num / 4 + 1
+    cur_num = 0  # 已提交份数
+    cur_fail = 0  # 已失败次数
     lock = threading.Lock()
-    useIp = False  # useIp变量，是我为这个程序做的最极致的优化（2023.12.09）
+    use_ip = False  # use_ip变量，是我为这个程序做的最极致的优化（2023.12.09）
     stop = False
     if validate(zanip()):
         print("IP设置成功, 将使用代理ip填写")
-        useIp = True
+        use_ip = True
     else:
         print("IP设置失败, 将使用本机ip填写")
     # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
