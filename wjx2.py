@@ -46,7 +46,7 @@ from selenium.webdriver.common.by import By
 
 
 def zanip():
-    # 这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，其余默认即可
+    # 这里放你的ip链接，选择你想要的地区，1分钟，ip池无所谓，数据格式txt，提取数量1，数量一定是1!其余默认即可
     api = "https://service.ipzan.com/core-extract?num=1&no=???&minute=1&area=all&pool=quality&secret=???"
     ip = requests.get(api).text
     return ip
@@ -168,9 +168,9 @@ def single(driver: WebDriver, current, index):
     if p == -1:
         r = random.randint(1, len(a))
     else:
-        if len(p) != len(a):
-            print(f"第{current}题参数数量：{len(p)},选项数量{len(a)},不一致！")
-            return
+        assert len(p) == len(
+            a
+        ), f"第{current}题参数长度：{len(p)},选项长度{len(a)},不一致！"
         r = numpy.random.choice(a=numpy.arange(1, len(a) + 1), p=p)
     driver.find_element(
         By.CSS_SELECTOR, f"#div{current} > div.ui-controlgroup > div:nth-child({r})"
@@ -198,9 +198,7 @@ def multiple(driver: WebDriver, current, index):
     options = driver.find_elements(By.XPATH, xpath)
     mul_list = []
     p = multiple_prob[index]
-    if len(options) != len(p):
-        print(f"第{current}题概率值和选项值不一致")
-        return
+    assert len(options) == len(p), f"第{current}题概率值和选项值不一致"
     # 生成序列,同时保证至少有一个1
     while sum(mul_list) <= 1:
         mul_list = []
@@ -404,7 +402,8 @@ def run(xx, yy):
 
 # 多线程执行run函数
 if __name__ == "__main__":
-    target_num = 6  # 目标份数
+    # 一个可以代刷问卷星的网站： http://sugarblack.top
+    target_num = 3  # 目标份数
     # 失败阈值，数值可自行修改为固定整数
     fail_threshold = target_num / 4 + 1
     cur_num = 0  # 已提交份数
@@ -417,18 +416,19 @@ if __name__ == "__main__":
         use_ip = True
     else:
         print("IP设置失败, 将使用本机ip填写")
-    # 需要几个窗口同时刷就设置几个thread_?，默认两个，args里的数字表示设置浏览器窗口打开时的初始xy坐标
-    thread_1 = Thread(target=run, args=(50, 50))
-    thread_2 = Thread(target=run, args=(650, 50))
-    # thread_3 = Thread(target=run, args=(650, 280))
+    num_threads = 2  # 窗口数量
+    threads: list[Thread] = []
+    # 创建并启动线程
+    for i in range(num_threads):
+        x = 50 + i * 60  # 浏览器弹窗左上角的横坐标
+        y = 50  # 纵坐标
+        thread = Thread(target=run, args=(x, y))
+        threads.append(thread)
+        thread.start()
 
-    thread_1.start()
-    thread_2.start()
-    # thread_3.start()
-
-    thread_1.join()
-    thread_2.join()
-    # thread_3.join()
+    # 等待所有线程完成
+    for thread in threads:
+        thread.join()
 
 """
     总结,你需要修改的有: 1 每个题的比例参数(必改)  2 问卷链接(必改)  3 ip链接(可选)  4 浏览器窗口数量(可选)
