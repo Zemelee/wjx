@@ -14,17 +14,14 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 
-"""
-    @Author:鐘
-    @Time:2024.4
-"""
 
 """
-任何疑问，请加qq群咨询：774326264 || 427847187 || 850281779  我看到了一定会耐心解答的！！！（划掉，不一定耐心了，因为被一些**问题耗尽了耐心，随缘了2023.5.5）
-代码前身可能更容易理解一点：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  使用教程： https://www.bilibili.com/video/BV1qc411T7CG/
-除了python，作者还发布了js版脚本在scriptcat上，名字就叫“问卷星脚本”，不带任何前后缀，使用可能比py更方便且支持跳题逻辑：https://scriptcat.org/zh-CN/script-show-page/2833
-greasyfork也有，但是这个网站被墙了，就暂时挪到scriptcat了
-相关系列教程：https://space.bilibili.com/29109990/channel/collectiondetail?sid=1340503&ctype=0
+任何疑问，请加qq群咨询：774326264 || 427847187 || 850281779
+代码简洁版：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  视频教程： https://www.bilibili.com/video/BV1qc411T7CG/
+除了python，作者还发布了js版脚本在scriptcat和greasyfork上，名字就叫“问卷星脚本”，不带任何前后缀，比py更方便且支持跳题逻辑：
+    scriptcat地址：https://scriptcat.org/zh-CN/script-show-page/2833
+    greasyfork地址：https://greasyfork.org/zh-CN/scripts/466722-%E9%97%AE%E5%8D%B7%E6%98%9F%E8%84%9A%E6%9C%AC
+    相关系列教程：https://space.bilibili.com/29109990/channel/collectiondetail?sid=1340503&ctype=0
 
 代码使用规则：
     你需要提前安装python环境，且已具备上述的所有安装包
@@ -32,7 +29,7 @@ greasyfork也有，但是这个网站被墙了，就暂时挪到scriptcat了
     并将chromeDriver放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
     按要求填写比例值并替换成自己的问卷链接即可运行你的问卷。
     虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
-    如果有疑问欢迎打扰我，如果不会python但确有需要也可以找我帮你刷嗷~（2023.05.04）
+    如果有疑问可以进群提问，或者直接通过代刷网 http://sugarblack.top 直接刷问卷
 """
 
 """
@@ -41,8 +38,7 @@ greasyfork也有，但是这个网站被墙了，就暂时挪到scriptcat了
 将自己电脑的公网ip添加到网站的白名单中，然后选择地区，时长为1分钟，数据格式为txt，提取数量选1
 然后点击生成api，将链接复制到放在zanip函数里
 设置完成后，不要问为什么和视频教程有点不一样，因为与时俱进！(其实是因为懒，毕竟代码改起来容易，视频录起来不容易嘿嘿2023.10.29)
-如果不需要ip可不设置，也不影响此程序直接运行（悄悄提醒，品赞ip每周可以领3块钱）
-需要国外代理(美其名曰科学上网)也可联系作者喔！
+如果不需要ip可不设置，只是所有问卷的ip都会是同一个（悄悄提醒，品赞ip每周可以领3块钱）
 """
 
 
@@ -410,7 +406,7 @@ if __name__ == "__main__":
     cur_num = 0  # 已提交份数
     cur_fail = 0  # 已失败次数
     lock = threading.Lock()
-    use_ip = False  # use_ip变量，是我为这个程序做的最极致的优化（2023.12.09）
+    use_ip = False
     stop = False
     if validate(zanip()):
         print("IP设置成功, 将使用代理ip填写")
@@ -434,6 +430,6 @@ if __name__ == "__main__":
 """
     总结,你需要修改的有: 1 每个题的比例参数(必改)  2 问卷链接(必改)  3 ip链接(可选)  4 浏览器窗口数量(可选)
     有疑问可以加qq群喔: 774326264 || 427847187 || 850281779 ; 
-    虽然我不一定回hhh, 但是群友们不一定不回;另外,我不是群主和管理！她们是我拉的不懂代码的工具人xixi
+    虽然我不一定回hhh, 但是群友们不一定不回
     Presented by 鐘
 """
