@@ -123,8 +123,8 @@ texts_prob = list(texts_prob.values())
 texts = list(texts.values())
 
 print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理, 并不保证高信效度。")
-print("如果对信效度有要求可以进群找群主代刷。")
-print("如果程序对你有帮助，请给我一个免费的star~!")
+print("刷问卷的其他方法可以参考:  http://sugarblack.top  ")
+print("如果程序对你有帮助，请给我一个免费的 star 或 fork ~!")
 
 
 # 校验IP地址合法性
