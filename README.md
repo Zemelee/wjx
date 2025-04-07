@@ -40,7 +40,7 @@
 
 ![teach](http://m.qpic.cn/psc?/V532vign3NjkvZ35dIQx2uX3fa3aVAL4/ruAMsa53pVQWN7FLK88i5lSfTSQ6OF08BFA*M9LlwqQ3sgiX11ixWCwmBPJ6thBQwTupLBdc7M.vWJglrkJH5zoCMc6LTr4BwpudP.kNd*0!/b&bo=QAbcAgAAAAABB7g!&rf=viewer_4 "看我看我！！！！")
 
-> 不会使用可以找作者代刷哦！！！！联系方式见QQ群：774326264 || 427847187 || 850281779
+> QQ交流群：774326264 || 427847187 || 850281779 || 931614446
 
 
 ## 最后的最后
