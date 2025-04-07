@@ -16,7 +16,7 @@ from selenium.webdriver.common.by import By
 
 
 """
-任何疑问，请加qq群咨询：774326264 || 427847187 || 850281779
+任何疑问，请加qq群咨询：774326264 || 427847187 || 850281779 || 931614446
 代码简洁版：https://github.com/Zemelee/wjx/blob/master/wjx.py  ---  视频教程： https://www.bilibili.com/video/BV1qc411T7CG/
 除了python，作者还发布了js版脚本在scriptcat和greasyfork上，名字就叫“问卷星脚本”，不带任何前后缀，比py更方便且支持跳题逻辑：
     scriptcat地址：https://scriptcat.org/zh-CN/script-show-page/2833
@@ -429,7 +429,7 @@ if __name__ == "__main__":
 
 """
     总结,你需要修改的有: 1 每个题的比例参数(必改)  2 问卷链接(必改)  3 ip链接(可选)  4 浏览器窗口数量(可选)
-    有疑问可以加qq群喔: 774326264 || 427847187 || 850281779 ; 
+    有疑问可以加qq群喔: 774326264 || 427847187 || 850281779 || 931614446; 
     虽然我不一定回hhh, 但是群友们不一定不回
     Presented by 鐘
 """
