@@ -1,47 +1,117 @@
-### 同学们可以给一个免费的star吗~！
-# 美其名曰《问卷星数据收集系统》
+# 🌟 问卷星自动填写系统
+
+> 同学们，给个免费的 Star 行吗？✨  
+> 求Star不给也没办法，毕竟我拿你们没办法.jpg
+
+![run](./assets/run.gif)
+
+## 🧾 项目简介  
+
+本项目名叫《问卷数据模拟系统》，基于 **Selenium** 实现自动化填写问卷功能。  
+虽然代码可能有点乱，但人和代码有一个能跑就行对吧？
+
+- ✅ **IP 切换**：通过代理服务器实现多 IP 填写，防止被封；
+- ✅ **选项比例定制**：每道题目可自定义选择比例，假装自己是个真实用户；
+- ✅ **多窗口并发**：支持多个浏览器窗口同时运行，填得快点不至于太无聊。
+
+## 🛠️ 功能特色  
+
+| 功能 | 描述 |
+|------|------|
+| 🌐 IP 切换 | 支持使用代理服务器切换 IP 地址，避免频繁提交导致 IP 被限制 |
+| 📊 题目选项比例设置 | 每个问题可设定各选项的随机分布比例，假装你是个人类 |
+| 🖼️ 多窗口并发 | 多线程打开多个浏览器窗口并行填写问卷，提升效率（也提升电脑风扇转速） |
+
+## 🚀 使用方法  
+
+### 1. 克隆项目到本地  
+
+```bash
+git clone https://github.com/Zemelee/wjx.git   
+```
 
 
-## 简介
-该项目利用 Selenium 自动填写问卷，支持 IP 切换、每道题选项比例定制、多窗口同时填写问卷etc...
+### 2. 安装依赖库  
 
-## 功能
-支持 IP 切换，可以通过代理服务器来避免 IP 被限制。
-支持每道题选项比例定制，可以根据需要设置每道题的选项比例。
-支持多窗口同时填写问卷，可以提高填写问卷的效率。
+如果你是通过 `git clone` 下载的项目，请执行：
 
-## 使用方法
-将项目 clone 到本地  
+```bash
+pip3 install -r requirements.txt
+```
 
-`git clone https://github.com/Zemelee/wjx.git` 
+如果直接复制代码，确保本地已安装以下库：
 
-或者直接copy到编辑器里
+- requests
+- numpy
+- selenium
 
-你还需要安装一些必备的库  
-如果你使用clone方式的话，执行下面这行命令：
+⚠️ 若运行报错，可能是库版本不兼容。  
+建议尝试不同版本重新运行，或者去 CSDN 搜一搜，说不定有人比你早踩坑。
 
-`pip3 install -r requirements.txt`  
+### 3. 安装 ChromeDriver  
 
-如果你直接copy代码到编辑器，确保本地环境中已经安装了这些库，如果没有的话，需要自己安装
-遇到问题可加qq群：774326264 || 427847187 || 850281779 || 931614446  虽然我不一定解答，但是群友们如果知道一般都会给出解答
-### 如果试运行报错，可能是库版本的问题，可以尝试其他版本的库再运（因为代码是没有问题的）
+把 `chromedriver.exe` 放入 Python 的安装目录中；
 
-还需要将chromeDriver放在python的安装目录  
+Chrome中输入 `chrome://version` 查看浏览器版本号；
 
-不同chrome版本的驱动文件不同，具体参考教程，需要去官网下载驱动文件  
+📌 根据你的 Chrome 浏览器版本下载对应的驱动程序：
 
-最新链接已经准备好了:[click me to download chromeDriver](https://googlechromelabs.github.io/chrome-for-testing/)  
+🔗 [点击下载 ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/)   
 
 
-运行 wjx2.py 文件即可开始填写问卷  
+### 4. 运行脚本  
 
-## 配置文件说明
-持续更新ing...
+执行主文件开始填写问卷：
 
-![teach](http://m.qpic.cn/psc?/V532vign3NjkvZ35dIQx2uX3fa3aVAL4/ruAMsa53pVQWN7FLK88i5lSfTSQ6OF08BFA*M9LlwqQ3sgiX11ixWCwmBPJ6thBQwTupLBdc7M.vWJglrkJH5zoCMc6LTr4BwpudP.kNd*0!/b&bo=QAbcAgAAAAABB7g!&rf=viewer_4 "看我看我！！！！")
+```bash
+python wjx2.py
+```
 
-> QQ交流群：774326264 || 427847187 || 850281779 || 931614446
+## ⚙️ 配置文件说明  
+
+🔧 配置文件持续更新中...  
+（意思是有些地方你自己看着改吧，注释应该够用了）
+
+你可以根据需要修改题目选项的比例、代理地址等参数，详细配置请参考项目中的注释说明。
+
+不想看代码？那你也可以试试这个网站：
+🔗 [糖黑代刷网 - 注册送额度](http://sugarblack.top)  
+图形界面操作，适合不想折腾的朋友。
+
+![teach](./assets/bilibili.png "看我看我！！！！")
+
+## 💬 加入交流群  
+
+有问题欢迎加入我们的 QQ 群进行交流👇
+
+👥 QQ 交流群（越往前可能越满）：
+
+| 序号 | 群号         |
+|------|--------------|
+| 群4    | 931614446    |
+| 群3    | 850281779    |
+| 群2    | 427847187    |
+| 群1    | 774326264    |
+
+💡 注：群里热心网友会帮助你（如果他们知道的话）。  
+当然，提问前请先看看群公告，别问“怎么安装”这种基础问题，除非你真的不会。
+
+## ❤️ 最后的话  
+
+如果你觉得这个项目对你有帮助，请不要吝啬你的 **Star**！  
+我写代码~~不是为了钱~~，就是为了虚荣心和成就感！
+
+![star](./assets/star.gif)
 
 
-## 最后的最后
-作者我搞了个[代刷网](http://sugarblack.top)，勉强能够将就用，注册送额度
+油猴的问卷星脚本：[脚本猫地址](https://scriptcat.org/zh-CN/script-show-page/2833) / [油叉网地址](https://greasyfork.org/zh-CN/scripts/466722-%E9%97%AE%E5%8D%B7%E6%98%9F%E8%84%9A%E6%9C%AC)
+
+油猴的问卷网脚本：[ScriptCat链接](https://scriptcat.org/zh-CN/script-show-page/3471) / [油叉网地址](https://greasyfork.org/zh-CN/scripts/536949-q11e-wjw)
+
+公众号：做实验的研究牲
+
+🎉 **感谢使用，祝你问卷轻松过百份，老板看了都感动！**
+
+最后的最后，不想看代码？那你也可以试试这个网站：
+🔗 [速填通 - 注册送额度](http://sugarblack.top)  
+图形界面操作，适合不想折腾的朋友。
