@@ -27,9 +27,8 @@
 ### 1. 克隆项目到本地  
 
 ```bash
-git clone https://github.com/Zemelee/wjx.git   
+git clone https://github.com/Zemelee/wjx.git     
 ```
-
 
 ### 2. 安装依赖库  
 
@@ -56,8 +55,7 @@ Chrome中输入 `chrome://version` 查看浏览器版本号；
 
 📌 根据你的 Chrome 浏览器版本下载对应的驱动程序：
 
-🔗 [点击下载 ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/)   
-
+🔗 [点击下载 ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/)
 
 ### 4. 运行脚本  
 
@@ -75,16 +73,33 @@ python wjx2.py
 你可以根据需要修改题目选项的比例、代理地址等参数，详细配置请参考项目中的注释说明。
 
 不想看代码？那你也可以试试这个网站：
-🔗 [糖黑代刷网 - 注册送额度](http://sugarblack.top)  
+🔗 [速填通 - 注册送额度](http://sugarblack.top)  
 图形界面操作，适合不想折腾的朋友。
 
 ![teach](./assets/bilibili.png "看我看我！！！！")
+
+
+## 📈 数据分析与模拟数据服务
+
+问卷填写搞定了，但后续的数据分析或没有真实数据怎么办？笔者提供**从零开始的模拟数据生成服务**！
+
+无论你是需要：
+*   满足特定信度要求的模拟数据
+*   符合预设效度指标的数据集
+*   具有特定相关性、回归关系的数据
+*   用于ANOVA或T检验的组间数据
+*   ......
+
+我们都可以根据你的**具体研究需求**，生成符合统计学指标的**定制化模拟数据**，并协助录入到问卷星系统中。
+
+如果你有这方面的需求，请**加入下方QQ群**，然后**私聊管理员**进行咨询。
+
 
 ## 💬 加入交流群  
 
 有问题欢迎加入我们的 QQ 群进行交流👇
 
-👥 QQ 交流群（越往前可能越满）：
+👥 QQ 交流群（越早人可能越满）：
 
 | 序号 | 群号         |
 |------|--------------|
@@ -103,15 +118,15 @@ python wjx2.py
 
 ![star](./assets/star.gif)
 
-
 油猴的问卷星脚本：[脚本猫地址](https://scriptcat.org/zh-CN/script-show-page/2833) / [油叉网地址](https://greasyfork.org/zh-CN/scripts/466722-%E9%97%AE%E5%8D%B7%E6%98%9F%E8%84%9A%E6%9C%AC)
 
 油猴的问卷网脚本：[ScriptCat链接](https://scriptcat.org/zh-CN/script-show-page/3471) / [油叉网地址](https://greasyfork.org/zh-CN/scripts/536949-q11e-wjw)
 
-公众号：做实验的研究牲
+公众号：[做实验的研究牲](https://mp.weixin.qq.com/s/iluh6THakUs8ygbphwVJ1Q)
 
 🎉 **感谢使用，祝你问卷轻松过百份，老板看了都感动！**
 
 最后的最后，不想看代码？那你也可以试试这个网站：
-🔗 [速填通 - 注册送额度](http://sugarblack.top)  
-图形界面操作，适合不想折腾的朋友。
+🔗 [速填通 - 注册送额度](http://sugarblack.top)。图形界面操作，适合不想折腾的朋友。
+
+最后的最后的最后，不想自己动手？进群咨询管理员，**从0开始完美模拟各种数据需求，一站式生成并录入问卷星系统，省心又省力！**
