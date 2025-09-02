@@ -121,9 +121,14 @@ matrix_prob = list(matrix_prob.values())
 scale_prob = list(scale_prob.values())
 texts_prob = list(texts_prob.values())
 texts = list(texts.values())
-
-print("所有按照比例刷题的脚本只能让问卷总体数据表面上看起来合理, 并不保证高信效度。")
-print("刷问卷的其他方法可以参考:  http://sugarblack.top  ")
+print("="*50)
+print("本脚本专注问卷填写的自动化，数据质量并不总是可靠。")
+print("如若期望数据能通过SPSS/AMOS分析，可添加README.md的群聊管理员。")
+print("管理员可提供数据定制服务，分析指标包括但不限于:")
+print("✅信度检验: α>0.8 \n✅效度检验: KMO>0.8、Bartlett检验p<0.05 \n✅相关性分析: r=0.3~0.7、p<0.05")
+print("✅线性回归: R²>0.6、p<0.05\n✅独立/配对T检验: p<0.05 \n✅ANOVA方差分析: p<0.05 \n✅中介/调节: 交互项显著\n...")
+print("="*50)
+print("刷问卷的其他方法可以参考:http://sugarblack.top")
 print("如果程序对你有帮助，请给我一个免费的 star 或 fork ~!")
 
 
