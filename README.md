@@ -133,3 +133,7 @@ python wjx2.py
 🔗 [速填通 - 注册送额度](http://sugarblack.top)。图形界面操作，适合不想折腾的朋友。
 
 最后的最后的最后，不想自己动手？进群咨询管理员，**从0开始完美模拟各种数据需求，一站式生成并录入问卷星系统，省心又省力！**
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Zemelee/wjx&type=date&legend=top-left)](https://www.star-history.com/#Zemelee/wjx&type=date&legend=top-left)
