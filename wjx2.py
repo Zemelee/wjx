@@ -29,7 +29,7 @@ from selenium.webdriver.common.by import By
     并将chromeDriver放在python安装目录下，以便和selenium配套使用，准备工作做好即可直接运行
     按要求填写比例值并替换成自己的问卷链接即可运行你的问卷。
     虽然但是！！！即使正确填写概率值，不保证100%成功运行，因为代码再强大也强大不过问卷星的灵活性，别问我怎么知道的，都是泪
-    如果有疑问可以进群提问，或者直接通过代刷网 http://sugarblack.top 直接刷问卷
+    如果有疑问可以进群提问，或者直接通过代填网 http://sugarblack.top 直接填问卷
 """
 
 """
@@ -50,7 +50,7 @@ def zanip():
 
 
 # 示例问卷,试运行结束后,需要改成你的问卷地址
-# 一个可以代刷问卷星的网站： http://sugarblack.top
+# 一个可以代填问卷星的网站： http://sugarblack.top
 url = "https://www.wjx.cn/vm/OM6GYNV.aspx#"
 
 """
@@ -128,7 +128,7 @@ print("管理员可提供数据定制服务，分析指标包括但不限于:")
 print("✅信度检验: α>0.8 \n✅效度检验: KMO>0.8、Bartlett检验p<0.05 \n✅相关性分析: r=0.3~0.7、p<0.05")
 print("✅线性回归: R²>0.6、p<0.05\n✅独立/配对T检验: p<0.05 \n✅ANOVA方差分析: p<0.05 \n✅中介/调节: 交互项显著\n...")
 print("="*50)
-print("刷问卷的其他方法可以参考:http://sugarblack.top")
+print("填问卷的其他方法可以参考:http://sugarblack.top")
 print("如果程序对你有帮助，请给我一个免费的 star 或 fork ~!")
 
 
@@ -267,7 +267,7 @@ def scale(driver: WebDriver, current, index):
     ).click()
 
 
-# 刷题逻辑函数
+# 填题逻辑函数
 def brush(driver: WebDriver):
     q_list = detect(driver)  # 检测页数和每一页的题量
     single_num = 0  # 第num个单选题
@@ -372,7 +372,7 @@ def run(xx, yy):
             driver.get(url)
             url1 = driver.current_url  # 表示问卷链接
             brush(driver)
-            # 刷完后给一定时间让页面跳转
+            # 填完后给一定时间让页面跳转
             time.sleep(4)
             url2 = (
                 driver.current_url
@@ -404,7 +404,7 @@ def run(xx, yy):
 
 # 多线程执行run函数
 if __name__ == "__main__":
-    # 一个可以代刷问卷星的网站： http://sugarblack.top
+    # 一个可以代填问卷星的网站： http://sugarblack.top
     target_num = 3  # 目标份数
     # 失败阈值，数值可自行修改为固定整数
     fail_threshold = target_num / 4 + 1
